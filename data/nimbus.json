@@ -1,0 +1,25 @@
+{
+  "account_name": "Nimbus Confectionery",
+  "industry": "Confectionery",
+  "tier": "Strategic",
+  "arr": "$2.1M (up from $1.6M a year ago)",
+  "products_in_use": [
+    "Retail-execution core (95% of stores live)",
+    "Image Recognition (rolled out in 2 of 5 markets)",
+    "Analytics dashboard (heavily used)"
+  ],
+  "adoption": "Daily active field users ~88% of licensed seats",
+  "key_people": [
+    "VP Sales (executive sponsor, very engaged)",
+    "National Field Ops lead (day-to-day champion, promoted last quarter)",
+    "New Regional Head in SE Asia (not yet met)"
+  ],
+  "last_90_days": [
+    "Successful quarterly business review",
+    "Asked about expanding Image Recognition to their other 3 markets",
+    "Attended our user conference"
+  ],
+  "open_issues": "1 minor dashboard bug, resolved in 3 days",
+  "renewal": "in 5 months",
+  "nps": "9 — advocate"
+}

@@ -1,0 +1,22 @@
+{
+  "account_name": "Zephyr Personal Care",
+  "industry": "Personal Care",
+  "tier": "Emerging",
+  "arr": "$0.4M (pilot pricing)",
+  "products_in_use": [
+    "Retail-execution core in a pilot — 1 region, ~120 of a potential ~2,000 stores"
+  ],
+  "adoption": "Active in the pilot region only; strong engagement there",
+  "key_people": [
+    "Innovation/Digital lead (signed the pilot, enthusiastic but junior)",
+    "No senior/budget-holder relationship yet"
+  ],
+  "last_90_days": [
+    "Pilot has run 8 months (originally scoped for 3)",
+    "Positive field feedback but no decision on national rollout",
+    "ROI case not yet built together"
+  ],
+  "open_issues": "None technical — the \"issue\" is momentum",
+  "renewal": "Pilot review in 6 weeks — convert to production or lapse",
+  "nps": "8 within the pilot team, but decision-makers are unengaged"
+}

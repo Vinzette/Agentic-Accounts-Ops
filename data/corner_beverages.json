@@ -1,0 +1,25 @@
+{
+  "account_name": "Corner Beverages",
+  "industry": "Beverage (bottling)",
+  "tier": "Growth",
+  "arr": "$1.1M (flat for 18 months)",
+  "products_in_use": [
+    "Retail-execution core (live but usage declining)",
+    "Analytics (barely used)",
+    "Image Recognition (bought, never rolled out)"
+  ],
+  "adoption": "Daily active field users dropped from 70% to 41% over two quarters",
+  "key_people": [
+    "Long-time champion (Head of Trade Marketing) left the company 6 weeks ago",
+    "Replacement not yet named",
+    "Procurement contact is cost-focused"
+  ],
+  "last_90_days": [
+    "Two escalated support tickets on sync reliability",
+    "A stakeholder mentioned a competitor's demo",
+    "No QBR held this quarter (couldn't get a meeting)"
+  ],
+  "open_issues": "3 tickets, 1 still open (data-sync delays)",
+  "renewal": "in 3 months",
+  "nps": "6 — passive, trending down"
+}
