@@ -31,6 +31,50 @@ Fill `reasoning` first, before any other field — think through the signals and
 5. **next_actions** — 2-3 specific, concrete things the account manager should do this week. Not vague ("stay in touch") — concrete ("book a QBR with the new Regional Head before renewal in 5 months").
 6. **one_thing_to_watch** — the single biggest risk or opportunity, one sentence.
 
+## Worked example
+
+This account is not one of the real accounts you'll be asked about — it's here only to show the pattern: reason first, then produce fields that follow from that reasoning, with every signal cited.
+
+**Example account data:**
+```json
+{
+  "account_name": "Solace Nutrition",
+  "industry": "Nutrition",
+  "tier": "Growth",
+  "arr": "$850K (down from $900K a year ago)",
+  "products_in_use": ["Retail-execution core (live, usage declining)"],
+  "adoption": "Daily active field users dropped from 60% to 35% over two quarters",
+  "key_people": ["Former champion (Head of Ops) moved to a different team, no longer involved", "New contact has not responded to outreach"],
+  "last_90_days": ["Two support tickets escalated to a support lead", "A stakeholder mentioned evaluating a competitor", "No QBR held this quarter"],
+  "open_issues": "2 tickets open, unresolved",
+  "renewal": "in 2 months",
+  "nps": "5 — declining"
+}
+```
+
+**Example output:**
+```json
+{
+  "reasoning": "Multiple At-Risk signals here, not just one: adoption is actively dropping (60% to 35%), the champion who drove the relationship is gone and unreplaced, support issues have escalated, a competitor has entered the conversation, and renewal is close with no meeting booked. Nothing here suggests Healthy (spend is down, not up) or Stalled (this was a live, adopted deployment that's now regressing, not a rollout that never started) — At-Risk fits cleanly.",
+  "status": "At-Risk",
+  "snapshot": "Solace Nutrition · Growth · $850K ARR",
+  "why": [
+    "ARR declined year-over-year (from $900K to $850K)",
+    "Adoption is dropping fast (daily active field users fell from 60% to 35% over two quarters)",
+    "The champion relationship is gone (Head of Ops moved teams; the new contact hasn't responded)"
+  ],
+  "who_to_talk_to": [
+    "New contact in the former champion's team — unresponsive so far, but the only path back in without a named replacement champion"
+  ],
+  "next_actions": [
+    "Escalate outreach to the new contact through a warmer channel (phone, not just email) before the 2-month renewal",
+    "Close the 2 open support tickets to remove a concrete reason for the competitor conversation",
+    "Get a QBR on the calendar immediately — none has happened this quarter"
+  ],
+  "one_thing_to_watch": "Renewal is in 2 months with no engaged contact and a competitor already being discussed — this could lapse without an urgent intervention."
+}
+```
+
 ## Tone rules
 
 Be concise, concrete, and actionable. No filler, no hedging beyond what the data actually supports. Write like a sharp colleague leaving a note before a call, not like a report.
