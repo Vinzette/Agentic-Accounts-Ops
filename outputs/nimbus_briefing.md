@@ -1,6 +1,6 @@
 # Pre-Call Briefing: Nimbus Confectionery
 
-**Generated:** 2026-08-18 20:16 UTC
+**Generated:** 2026-08-18 21:20 UTC
 
 ---
 
@@ -11,16 +11,16 @@
 ### Why
 - ARR grew 31% year-over-year (from $1.6M to $2.1M)
 - Adoption is strong (88% of licensed seats are daily active users)
-- VP Sales is very engaged as the executive sponsor (key person)
+- NPS is high (9, advocate)
 
 ### Who to Talk To
 - VP Sales (executive sponsor, very engaged)
-- New Regional Head in SE Asia (not yet met, potential for expansion)
+- National Field Ops lead (day-to-day champion, promoted last quarter)
 
 ### Next Actions
-1. Schedule a meeting with the new Regional Head in SE Asia to discuss potential expansion of Image Recognition.
-2. Prepare a proposal for expanding Image Recognition to the remaining 3 markets before the next QBR.
-3. Confirm the next quarterly business review date with the VP Sales.
+1. Schedule a meeting with the new Regional Head in SE Asia to introduce our offerings and discuss potential expansion.
+2. Follow up on the interest in expanding Image Recognition to the other 3 markets.
+3. Prepare for the renewal discussion in 5 months by reviewing current usage and potential upsell opportunities.
 
 ### ⚠️ One Thing to Watch
-Potential expansion of Image Recognition into additional markets could significantly increase ARR.
+The potential expansion of Image Recognition into additional markets could significantly increase ARR.

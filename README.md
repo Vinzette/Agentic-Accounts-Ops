@@ -22,6 +22,8 @@ Each run prints the briefing to the console and saves it to `outputs/{account}_b
 
 `main.py` runs a 4-node LangGraph `StateGraph`: `load_data` → `generate_briefing` → `validate_output` → `save_and_display`. Only `generate_briefing` calls an LLM (GPT-4o via structured output bound to the `Briefing` Pydantic model in `models.py`); the other three nodes are plain data plumbing. The system prompt — including the classification rubric and citation rule — lives in `prompts/briefing_prompt.md`, separate from the code. `--account` accepts multiple names and loops the same compiled graph per account sequentially.
 
+`Briefing` has a `reasoning` field, filled first, before `status` or anything else — the model has to think through the rubric before committing to an answer, not justify an answer after the fact. It's never shown to the account manager; `save_and_display` writes it to `debug/{account}_reasoning.md` instead, kept separate from the real output.
+
 ## Project structure
 
 ```
@@ -32,4 +34,5 @@ models.py     # Pydantic models (Briefing, AccountStatus)
 prompts/      # System prompt (rubric + output template)
 data/         # Mock account JSON
 outputs/      # Generated briefings
+debug/        # Reasoning traces per account (not shown to the account manager)
 ```

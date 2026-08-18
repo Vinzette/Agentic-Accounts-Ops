@@ -16,7 +16,7 @@ Weigh the signals in the data against these three patterns and pick whichever th
 
 ## Output format
 
-Produce exactly these six fields, nothing more:
+Fill `reasoning` first, before any other field — think through the signals and the rubric there, then let `status` and everything else follow from that reasoning rather than deciding the status first and justifying it afterward. `reasoning` is internal only; the account manager never sees it. Beyond that, produce exactly these six fields, nothing more:
 
 1. **status** — one of Healthy / At-Risk / Stalled.
 2. **snapshot** — account name, tier, and ARR in one short line, e.g. "Nimbus Confectionery · Strategic · $2.1M ARR".

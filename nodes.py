@@ -9,6 +9,7 @@ from models import Briefing
 PROMPTS_DIR = Path(__file__).parent / "prompts"
 DATA_DIR = Path(__file__).parent / "data"
 OUTPUTS_DIR = Path(__file__).parent / "outputs"
+DEBUG_DIR = Path(__file__).parent / "debug"
 
 STATUS_EMOJI = {
     "Healthy": "🟢",
@@ -106,7 +107,17 @@ def save_and_display(state: dict) -> dict:
     output_path = OUTPUTS_DIR / f"{account_name}_briefing.md"
     output_path.write_text(markdown)
 
+    DEBUG_DIR.mkdir(exist_ok=True)
+    reasoning_path = DEBUG_DIR / f"{account_name}_reasoning.md"
+    reasoning_path.write_text(
+        f"# Reasoning trace: {state['account_data']['account_name']}\n\n"
+        f"**Generated:** {timestamp}\n\n"
+        f"Internal only — not shown to the account manager. Kept for debugging "
+        f"a wrong classification or a weird output.\n\n---\n\n{briefing.reasoning}\n"
+    )
+
     print(markdown)
     print(f"\nSaved to {output_path}")
+    print(f"Reasoning saved to {reasoning_path}")
 
     return {"output_path": str(output_path)}

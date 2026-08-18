@@ -1,6 +1,6 @@
 # Pre-Call Briefing: Corner Beverages
 
-**Generated:** 2026-08-18 20:16 UTC
+**Generated:** 2026-08-18 21:21 UTC
 
 ---
 
@@ -14,12 +14,12 @@
 - Long-time champion left the company 6 weeks ago (Head of Trade Marketing)
 
 ### Who to Talk To
-- Procurement contact, as they are currently the main point of contact and are cost-focused, which could impact renewal discussions
+- Procurement contact (cost-focused, important for renewal discussions)
 
 ### Next Actions
-1. Identify and reach out to potential new champions within the organization to fill the gap left by the Head of Trade Marketing
-2. Address the open support ticket on data-sync delays to improve customer satisfaction
-3. Schedule a QBR to discuss renewal and address any concerns, especially with the renewal in 3 months
+1. Schedule a QBR to re-engage the account and address open issues before renewal in 3 months.
+2. Identify and reach out to potential new champions within the organization to fill the advocacy gap left by the Head of Trade Marketing's departure.
+3. Resolve the open data-sync delay ticket to improve customer satisfaction.
 
 ### ⚠️ One Thing to Watch
-Monitor the appointment of a new Head of Trade Marketing, as this role is crucial for driving product adoption and renewal.
+Watch for any further mentions of competitors, as this could indicate a risk of churn.
