@@ -33,5 +33,3 @@ prompts/      # System prompt (rubric + output template)
 data/         # Mock account JSON
 outputs/      # Generated briefings
 ```
-
-Design rationale and Part B answers are in the submission doc linked from this repo, not duplicated here.
