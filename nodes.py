@@ -3,8 +3,9 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from langchain_openai import ChatOpenAI
+from pydantic import ValidationError
 
-from models import Briefing
+from models import AccountData, Briefing
 
 PROMPTS_DIR = Path(__file__).parent / "prompts"
 DATA_DIR = Path(__file__).parent / "data"
@@ -25,9 +26,17 @@ def load_data(state: dict) -> dict:
         raise FileNotFoundError(
             f"No data file for account '{account_name}' at {data_path}"
         )
-    account_data = json.loads(data_path.read_text())
+    raw = json.loads(data_path.read_text())
+
+    try:
+        AccountData.model_validate(raw)
+    except ValidationError as e:
+        raise ValueError(
+            f"{data_path} doesn't match the expected account data shape:\n{e}"
+        ) from e
+
     generated_at = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
-    return {"account_data": account_data, "generated_at": generated_at}
+    return {"account_data": raw, "generated_at": generated_at}
 
 
 def generate_briefing(state: dict) -> dict:

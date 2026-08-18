@@ -1,6 +1,6 @@
 # Pre-Call Briefing: Nimbus Confectionery
 
-**Generated:** 2026-08-18 21:25 UTC
+**Generated:** 2026-08-18 21:31 UTC
 
 ---
 
@@ -14,13 +14,13 @@
 - VP Sales is an engaged executive sponsor (actively involved)
 
 ### Who to Talk To
-- VP Sales (executive sponsor) - Key decision-maker and advocate for expansion
-- New Regional Head in SE Asia - Important for potential market expansion
+- VP Sales (executive sponsor) - to discuss strategic alignment and future expansion plans
+- National Field Ops lead (day-to-day champion) - to ensure continued operational success and support
 
 ### Next Actions
-1. Schedule a meeting with the new Regional Head in SE Asia to introduce our offerings and discuss potential expansion.
-2. Follow up on the interest in expanding Image Recognition to the other 3 markets.
-3. Prepare a proposal for the expansion of Image Recognition to present at the next QBR.
+1. Schedule a meeting with the new Regional Head in SE Asia to introduce our offerings and explore opportunities for expansion in that region.
+2. Follow up on the interest in expanding Image Recognition to the other 3 markets to understand their timeline and requirements.
+3. Plan the next quarterly business review to maintain engagement and address any emerging needs.
 
 ### ⚠️ One Thing to Watch
-The potential expansion of Image Recognition into additional markets presents a significant growth opportunity.
+Monitor the expansion of Image Recognition into new markets as a key growth opportunity.

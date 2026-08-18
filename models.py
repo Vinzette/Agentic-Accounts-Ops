@@ -9,6 +9,22 @@ class AccountStatus(str, Enum):
     STALLED = "Stalled"
 
 
+class AccountData(BaseModel):
+    """Contract for a data/{account}.json file — validated before it's sent to the LLM."""
+
+    account_name: str
+    industry: str
+    tier: str
+    arr: str
+    products_in_use: list[str] = Field(min_length=1)
+    adoption: str
+    key_people: list[str] = Field(min_length=1)
+    last_90_days: list[str] = Field(min_length=1)
+    open_issues: str
+    renewal: str
+    nps: str
+
+
 class Briefing(BaseModel):
     reasoning: str = Field(description="Think step by step, before anything else: walk through the signals in the account data, weigh them against the Healthy/At-Risk/Stalled rubric, and explain which way they point and why. Write this first — the other fields should follow from this reasoning, not the other way around. Internal only, never shown to the account manager.")
     status: AccountStatus
