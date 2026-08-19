@@ -1,6 +1,6 @@
 # Pre-Call Briefing: Nimbus Confectionery
 
-**Generated:** 2026-08-18 21:31 UTC
+**Generated:** 2026-08-19 06:56 UTC
 
 ---
 
@@ -9,18 +9,18 @@
 **Snapshot:** Nimbus Confectionery · Strategic · $2.1M ARR
 
 ### Why
-- ARR grew 31% year-over-year (from $1.6M to $2.1M)
-- Adoption is strong (88% of licensed seats are daily active users)
-- VP Sales is an engaged executive sponsor (actively involved)
+- Revenue is growing strongly year-over-year ($2.1M ARR, up from $1.6M a year ago)
+- Adoption is very high among licensed users (daily active field users ~88% of licensed seats)
+- They are both happy and expansion-minded (NPS 9 — advocate; asked about expanding Image Recognition to their other 3 markets)
 
 ### Who to Talk To
-- VP Sales (executive sponsor) - to discuss strategic alignment and future expansion plans
-- National Field Ops lead (day-to-day champion) - to ensure continued operational success and support
+- VP Sales (executive sponsor, very engaged — anchors renewal and expansion decisions)
+- New Regional Head in SE Asia (not yet met — key for regional Image Recognition rollout and local adoption)
 
 ### Next Actions
-1. Schedule a meeting with the new Regional Head in SE Asia to introduce our offerings and explore opportunities for expansion in that region.
-2. Follow up on the interest in expanding Image Recognition to the other 3 markets to understand their timeline and requirements.
-3. Plan the next quarterly business review to maintain engagement and address any emerging needs.
+1. Scope the Image Recognition rollout for the 3 remaining markets ahead of the 5‑month renewal
+2. Book an introductory call with the new Regional Head in SE Asia to understand their priorities and share current results
+3. Draft an early renewal / multi‑year proposal leveraging the ARR growth, 88% daily active usage, and NPS 9 as the value case
 
 ### ⚠️ One Thing to Watch
-Monitor the expansion of Image Recognition into new markets as a key growth opportunity.
+Watch for who emerges under the promoted National Field Ops lead as the new day-to-day operational owner, so the relationship doesn’t rest on a single champion whose role is shifting upward.

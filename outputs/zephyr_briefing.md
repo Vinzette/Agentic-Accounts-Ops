@@ -1,25 +1,26 @@
 # Pre-Call Briefing: Zephyr Personal Care
 
-**Generated:** 2026-08-18 21:25 UTC
+**Generated:** 2026-08-19 06:57 UTC
 
 ---
 
 ## 🔴 Status: Stalled
 
-**Snapshot:** Zephyr Personal Care · Emerging · $0.4M ARR
+**Snapshot:** Zephyr Personal Care · Emerging · $0.4M ARR (pilot)
 
 ### Why
-- Pilot has extended from 3 months to 8 months without a decision (originally scoped for 3 months, now 8 months)
-- No senior decision-maker or budget-holder relationship established (only junior Innovation/Digital lead involved)
-- ROI case not yet built, hindering decision on national rollout (no ROI case built)
+- Pilot timeline has overrun with no decision (pilot has run 8 months, originally scoped for 3)
+- Decision-makers are not engaged despite good usage (no senior/budget-holder relationship yet; NPS 8 only within the pilot team, decision-makers unengaged)
+- The pilot is narrow relative to potential scale and still confined there (retail-execution core live only in 1 region, ~120 of a potential ~2,000 stores)
 
 ### Who to Talk To
-- Innovation/Digital lead — currently the main contact, enthusiastic but lacks seniority to drive decisions
+- Innovation/Digital lead — current champion who signed the pilot and is enthusiastic, key to sponsoring access upward
+- Prospective senior budget-holder (likely Sales or Trade Marketing head) — not yet engaged but essential for a national rollout and pilot conversion decision
 
 ### Next Actions
-1. Develop a compelling ROI case with the pilot team to present to senior management before the pilot review in 6 weeks.
-2. Identify and engage a senior decision-maker or budget-holder to advocate for the national rollout.
-3. Schedule a meeting with the pilot team to strategize on how to present the pilot's success and potential benefits to senior management.
+1. Set up a working session with the innovation lead to co-build a simple ROI/business case using the positive field feedback
+2. Ask the innovation lead to sponsor an introduction and joint meeting with the senior budget-holder before the pilot review in 6 weeks
+3. Draft a high-level national rollout plan (from 120 to ~2,000 stores) to use as a discussion artifact in the pilot review
 
 ### ⚠️ One Thing to Watch
-The pilot review in 6 weeks is critical; without senior engagement and a strong ROI case, the account may not convert to production.
+Whether the pilot review in 6 weeks is formally scheduled with the right attendees, as a slip or quiet internal review without us could cause the pilot to lapse despite strong local engagement.

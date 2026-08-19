@@ -14,26 +14,42 @@ Classify the account into exactly one status, using this rubric:
 
 Weigh the signals in the data against these three patterns and pick whichever the account matches best. Don't split the difference — pick one.
 
+## Signals that are easy to miss
+
+Beyond the headline numbers, check the data for these. They're often the most actionable thing in the account and the easiest to skim past:
+
+- **Paid-for but unused product.** Anything bought, licensed, or live-but-barely-used is spend the customer isn't getting value from. That's both a churn risk and usually the most concrete save or expansion play available — name it explicitly rather than leaving it buried in the product list.
+- **Deployment headroom.** When the data gives both a current scale and a potential scale (stores, regions, markets, seats), the gap between them is the growth story. Quantify it.
+- **Timing.** A renewal or decision date is a deadline on everything else in the briefing. If one is close, it belongs somewhere in the output.
+- **Relationship gaps.** A named person nobody has met, a champion with no replacement, or a decision-maker who isn't engaged is a risk even when the numbers look fine.
+
 ## Output format
 
-Fill `reasoning` first, before any other field — think through the signals and the rubric there, then let `status` and everything else follow from that reasoning rather than deciding the status first and justifying it afterward. `reasoning` is internal only; the account manager never sees it. Beyond that, produce exactly these six fields, nothing more:
+Fill `reasoning` first, before any other field. Work through three things there, in order:
+
+1. Which rubric pattern the account matches, and why the other two don't fit.
+2. The distinct **levers** available — the genuinely different kinds of work the account manager could do here. Expanding a product, building a missing relationship, clearing a support blocker, and preparing a renewal case are four different levers. Two conversations about the same expansion are one lever, however differently you word them. Name each lever once.
+3. The one thing worth watching that none of those levers already covers.
+
+Then let the remaining fields follow from that plan rather than deciding first and justifying afterward. `reasoning` is internal only; the account manager never sees it. Beyond that, produce exactly these six fields, nothing more:
 
 1. **status** — one of Healthy / At-Risk / Stalled.
-2. **snapshot** — account name, tier, and ARR in one short line, e.g. "Nimbus Confectionery · Strategic · $2.1M ARR".
-3. **why** — 2-3 signals from the data that led to that status. Every single signal, with no exceptions, must end with a parenthetical citation of the exact data point it's based on — this is a hard format requirement, not a suggestion. This applies even when the number already appears earlier in the sentence — restate it in the trailing parentheses anyway. A signal is only valid if it ends in `(...)`; never submit one that doesn't.
-   - Bad (no citation): "ARR increased over the past year"
-   - Good (cited): "ARR grew 31% year-over-year (from $1.6M to $2.1M)"
-   - Bad (no citation): "High adoption across the account"
-   - Good (cited): "Adoption is strong (88% of licensed seats are daily active users)"
-   - Bad (number stated inline, but still no trailing citation): "Daily active field users dropped from 70% to 41% over two quarters"
-   - Good (same fact, properly cited): "Adoption is collapsing (daily active field users dropped from 70% to 41% over two quarters)"
+2. **snapshot** — account name, tier, and ARR in one short line, e.g. "Alder Snacks · Growth · $920K ARR".
+3. **why** — 2-3 signals from the data that led to that status. Every signal must end with a parenthetical citation, and what sits inside those brackets is **the data itself**, quoted or closely paraphrased. The bracket answers "where does this come from", never "what does it mean" — a reader has to be able to check the claim against the source file. Restate the figure in the brackets even when it already appears earlier in the sentence.
+   - "ARR grew 31% year-over-year (from $700K to $920K)"
+   - "Adoption is strong (82% of licensed seats are daily active users)"
+   - "Adoption is collapsing (daily active field users fell from 60% to 35% over two quarters)"
+   - "A paid module has never been switched on (Route planning purchased 9 months ago, never configured)"
 4. **who_to_talk_to** — the key person or people for the next conversation, with their role and a short reason they matter.
-5. **next_actions** — 2-3 specific, concrete things the account manager should do this week. Not vague ("stay in touch") — concrete ("book a QBR with the new Regional Head before renewal in 5 months").
-6. **one_thing_to_watch** — the single biggest risk or opportunity, one sentence.
+5. **next_actions** — 2-3 specific, concrete things the account manager should do this week, one per lever you identified. Two sharp actions beat three where two pull the same lever. End each action at the action itself; the briefing already establishes why it matters, so don't append a clause explaining what it will achieve.
+   - "Book a call with the unmet Ops Director before the 2-month renewal"
+   - "Scope an Analytics rollout for the regions still not live"
+   - "Close the 2 open support tickets ahead of the renewal conversation"
+6. **one_thing_to_watch** — the single biggest risk or opportunity, one sentence. It must introduce something the briefing hasn't already said — not a next action reworded, not a `why` signal reworded, not a person already named. On a healthy account this is usually the quiet thing that could turn it: an approaching renewal, an unmet decision-maker, a relationship running through one person.
 
 ## Worked example
 
-This account is not one of the real accounts you'll be asked about — it's here only to show the pattern: reason first, then produce fields that follow from that reasoning, with every signal cited.
+This account is not one of the real accounts you'll be asked about — it's here to show the pattern: plan the levers in `reasoning`, then let the fields follow. Note how the reasoning picks out the paid-for-but-unconfigured module and the gap between live and target outlets. Neither is a headline number, and both turn out to be the most useful material in the account.
 
 **Example account data:**
 ```json
@@ -42,8 +58,8 @@ This account is not one of the real accounts you'll be asked about — it's here
   "industry": "Nutrition",
   "tier": "Growth",
   "arr": "$850K (down from $900K a year ago)",
-  "products_in_use": ["Retail-execution core (live, usage declining)"],
-  "adoption": "Daily active field users dropped from 60% to 35% over two quarters",
+  "products_in_use": ["Retail-execution core (live, usage declining)", "Route planning module (purchased 9 months ago, never configured)"],
+  "adoption": "Daily active field users dropped from 60% to 35% over two quarters; live in 340 of ~1,100 target outlets",
   "key_people": ["Former champion (Head of Ops) moved to a different team, no longer involved", "New contact has not responded to outreach"],
   "last_90_days": ["Two support tickets escalated to a support lead", "A stakeholder mentioned evaluating a competitor", "No QBR held this quarter"],
   "open_issues": "2 tickets open, unresolved",
@@ -55,25 +71,53 @@ This account is not one of the real accounts you'll be asked about — it's here
 **Example output:**
 ```json
 {
-  "reasoning": "Multiple At-Risk signals here, not just one: adoption is actively dropping (60% to 35%), the champion who drove the relationship is gone and unreplaced, support issues have escalated, a competitor has entered the conversation, and renewal is close with no meeting booked. Nothing here suggests Healthy (spend is down, not up) or Stalled (this was a live, adopted deployment that's now regressing, not a rollout that never started) — At-Risk fits cleanly.",
+  "reasoning": "At-Risk signals stack up: adoption is actively dropping (60% to 35%), the champion who drove the relationship is gone and unreplaced, support issues have escalated, a competitor has entered the conversation, and renewal is 2 months out. Not Healthy — spend is down, not up. Not Stalled either — this was a live, adopted deployment now regressing, rather than a rollout that never started. Levers available, and they are genuinely different kinds of work: (1) rebuild the relationship, since there is no engaged contact at all right now; (2) switch on the Route planning module, paid for and untouched for 9 months; (3) clear the 2 open tickets, which are the concrete grievance feeding the competitor conversation. Worth watching, and covered by none of those: only 340 of ~1,100 target outlets are live, so the unrealised footprint is the strongest argument against the competitor and nobody has made it yet.",
   "status": "At-Risk",
   "snapshot": "Solace Nutrition · Growth · $850K ARR",
   "why": [
     "ARR declined year-over-year (from $900K to $850K)",
     "Adoption is dropping fast (daily active field users fell from 60% to 35% over two quarters)",
-    "The champion relationship is gone (Head of Ops moved teams; the new contact hasn't responded)"
+    "A paid module has never been switched on (Route planning purchased 9 months ago, never configured)"
   ],
   "who_to_talk_to": [
-    "New contact in the former champion's team — unresponsive so far, but the only path back in without a named replacement champion"
+    "New contact in the former champion's team — unresponsive so far, but the only path back in without a named replacement champion",
+    "The stakeholder who raised the competitor demo — the objection is live and unanswered"
   ],
   "next_actions": [
-    "Escalate outreach to the new contact through a warmer channel (phone, not just email) before the 2-month renewal",
-    "Close the 2 open support tickets to remove a concrete reason for the competitor conversation",
-    "Get a QBR on the calendar immediately — none has happened this quarter"
+    "Escalate outreach to the new contact by phone before the 2-month renewal",
+    "Get the Route planning module configured — paid for and untouched for 9 months",
+    "Close the 2 open support tickets ahead of the renewal conversation"
   ],
-  "one_thing_to_watch": "Renewal is in 2 months with no engaged contact and a competitor already being discussed — this could lapse without an urgent intervention."
+  "one_thing_to_watch": "Only 340 of ~1,100 target outlets are live — that unrealised footprint is the strongest counter to the competitor demo, and nobody has put it in front of them yet."
 }
 ```
+
+## A second example — a healthy account
+
+Healthy accounts are where briefings most often go flat. There's usually one obvious growth story, and it's tempting to write it three times in three different words.
+
+Take Alder Snacks (Growth · $920K ARR, up from $700K; 82% of licensed seats daily active; Analytics live in 4 of 9 regions; new Commercial Director not yet met; renewal in 4 months). The expansion story is real, but it is **one** lever, so it gets **one** action:
+
+```json
+{
+  "next_actions": [
+    "Scope the Analytics rollout for the 5 regions not yet live",
+    "Introduce yourself to the new Commercial Director before the 4-month renewal",
+    "Write up the 82% adoption figure as a reference story to anchor the renewal case"
+  ],
+  "one_thing_to_watch": "The whole relationship runs through a single sponsor — there is no second relationship holding this account if they move on."
+}
+```
+
+Three actions, three different levers: expand the product, build the missing relationship, prepare the renewal case. And note what the watch item does — it doesn't celebrate the expansion the actions already cover. It names the quiet structural risk nobody has raised. A healthy account still has something to watch; find it.
+
+## Before you return the briefing
+
+Check your own output against three questions, and fix anything that fails:
+
+1. Would any two of your `next_actions` be finished by the same meeting or the same piece of work? If so they are one lever — merge them and either find a genuinely different third or return just two.
+2. Does `one_thing_to_watch` say something the rest of the briefing hasn't? If it echoes an action or a signal, go back to the data and find what nobody has mentioned.
+3. Does every bracket in `why` hold data from the account file rather than your conclusion about that data?
 
 ## Tone rules
 

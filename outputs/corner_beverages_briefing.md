@@ -1,6 +1,6 @@
 # Pre-Call Briefing: Corner Beverages
 
-**Generated:** 2026-08-18 21:25 UTC
+**Generated:** 2026-08-19 06:56 UTC
 
 ---
 
@@ -9,17 +9,18 @@
 **Snapshot:** Corner Beverages · Growth · $1.1M ARR
 
 ### Why
-- ARR has been flat for 18 months ($1.1M, no growth)
-- Adoption is declining (daily active field users dropped from 70% to 41% over two quarters)
-- Long-time champion left with no replacement named (Head of Trade Marketing left 6 weeks ago)
+- Adoption is deteriorating quickly (daily active field users dropped from 70% to 41% over two quarters)
+- The main champion has gone with no successor (Long-time champion, Head of Trade Marketing, left 6 weeks ago; replacement not yet named)
+- Paid modules are not delivering value (Analytics is ‘barely used’; Image Recognition was bought but ‘never rolled out’)
 
 ### Who to Talk To
-- Procurement contact — currently the main point of contact, though cost-focused, they are crucial for navigating the renewal process
+- Whoever is acting in place of the Head of Trade Marketing — likely the interim or upcoming replacement sponsor who can own commercial outcomes and counter pure cost focus
+- The procurement contact — cost-focused stakeholder who will drive renewal pricing and can either block or back an adoption and value-recovery plan
 
 ### Next Actions
-1. Identify and engage a new champion within the organization to replace the former Head of Trade Marketing
-2. Resolve the open data-sync ticket to improve reliability and customer satisfaction
-3. Schedule a QBR to re-engage the account and address any concerns before the renewal in 3 months
+1. Secure a meeting with the interim or successor to the Head of Trade Marketing and re-establish an executive sponsor before the 3-month renewal
+2. Run a focused adoption and value-recovery session to tackle declining field usage, activate Analytics meaningfully, and agree a go/no-go plan and timeline for Image Recognition rollout
+3. Work with Support to resolve the remaining open data-sync ticket and then share a short stability/update summary with stakeholders ahead of the next call
 
 ### ⚠️ One Thing to Watch
-The absence of a champion and the mention of a competitor could lead to a loss of the account if not addressed before the renewal.
+Unused and underused modules (barely used Analytics and never-rolled-out Image Recognition) give procurement a clean narrative to cut scope or push price at renewal if you don’t reposition them as part of a deliberate plan.
