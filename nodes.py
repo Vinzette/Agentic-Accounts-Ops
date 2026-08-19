@@ -43,7 +43,7 @@ def generate_briefing(state: dict) -> dict:
     system_prompt = (PROMPTS_DIR / "briefing_prompt.md").read_text()
     account_json = json.dumps(state["account_data"], indent=2)
 
-    llm = ChatOpenAI(model="gpt-4o", temperature=0)
+    llm = ChatOpenAI(model="gpt-5.1", temperature=0)
     structured_llm = llm.with_structured_output(Briefing, include_raw=True)
 
     result = structured_llm.invoke(
