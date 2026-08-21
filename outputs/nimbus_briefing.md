@@ -1,6 +1,6 @@
 # Pre-Call Briefing: Nimbus Confectionery
 
-**Generated:** 2026-08-21 13:14 UTC
+**Generated:** 2026-08-21 14:37 UTC
 
 ---
 
@@ -9,19 +9,19 @@
 **Snapshot:** Nimbus Confectionery · Strategic · $2.1M ARR
 
 ### Why
-- ARR grew sharply year-over-year (from $1.6M to $2.1M)
-- Adoption is very strong (daily active field users ~88% of licensed seats)
-- They are actively exploring expansion of a paid module (Image Recognition rolled out in 2 of 5 markets, and they asked about expanding it to the other 3 markets)
+- Revenue is growing strongly year-over-year (ARR up from $1.6M to $2.1M)
+- Adoption is very high (daily active field users ~88% of licensed seats)
+- They are happy and promotive (NPS 9 — advocate)
 
 ### Who to Talk To
-- VP Sales, executive sponsor — very engaged and the key decision-maker for expansion and early renewal discussions
-- National Field Ops lead, day-to-day champion — recently promoted and central to operationalizing an Image Recognition rollout
-- New Regional Head in SE Asia — not yet met and likely critical stakeholder for extending Image Recognition into that region
+- VP Sales (executive sponsor, very engaged, ideal for aligning on expansion and early renewal)
+- National Field Ops lead (day-to-day champion who just got promoted, key to scoping Image Recognition rollout)
+- New Regional Head in SE Asia (unmet stakeholder who will influence regional deployment and local adoption)
 
 ### Next Actions
-1. Scope an Image Recognition rollout plan and commercial proposal for the 3 non-live markets
-2. Set up a working session with the National Field Ops lead to capture outcomes from the last QBR and align on field priorities for the next 6–12 months
-3. Introduce yourself to the new Regional Head in SE Asia and walk them through current results from the 2 Image Recognition markets and the Analytics dashboard usage
+1. Scope and propose a phased Image Recognition expansion plan for the remaining 3 markets
+2. Set up an introduction call with the new Regional Head in SE Asia
+3. Use the next touchpoint to float an early renewal / multi-year discussion anchored on the strong adoption and recent successful QBR
 
 ### ⚠️ One Thing to Watch
-How quickly and positively SE Asia engages with the platform, given the new Regional Head and the pending decision on rolling Image Recognition into that and other remaining markets.
+Whether Analytics usage is concentrated in a small central team or broadly adopted across regions and functions, as that concentration would be both a dependency risk and an untapped expansion area.

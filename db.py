@@ -83,8 +83,8 @@ runs = Table(
 )
 
 SEED_MANAGERS = [
-    {"name": "Priya Menon", "region": "Global Accounts"},
-    {"name": "Arjun Rao", "region": "International Markets"},
+    {"name": "Adit Chauhan", "region": "International Markets & Global Accounts"},
+    {"name": "Arjun Rao", "region": "APAC"},
 ]
 
 _engine: Engine | None = None
@@ -154,6 +154,20 @@ def list_managers() -> list[dict]:
     )
     with engine().connect() as conn:
         return [row._asdict() for row in conn.execute(query)]
+
+
+def create_manager(name: str, region: str | None = None) -> dict:
+    """Add a manager. Raises ValueError if the name is already taken."""
+    with engine().begin() as conn:
+        taken = conn.execute(
+            select(account_managers.c.id).where(account_managers.c.name == name)
+        ).first()
+        if taken:
+            raise ValueError(f"There is already a manager called {name}.")
+
+        conn.execute(insert(account_managers).values(name=name, region=region))
+
+    return next(m for m in list_managers() if m["name"] == name)
 
 
 def list_accounts(manager_id: int | None = None) -> list[dict]:
@@ -254,6 +268,16 @@ def _self_check() -> None:
 
         managers = list_managers()
         assert len(managers) == len(SEED_MANAGERS), managers
+
+        added = create_manager("Test Manager", "Nowhere")
+        assert added["account_count"] == 0 and added["region"] == "Nowhere", added
+        assert len(list_managers()) == len(SEED_MANAGERS) + 1
+        try:
+            create_manager("Test Manager")
+            raise AssertionError("duplicate manager name should raise")
+        except ValueError as e:
+            assert "already a manager" in str(e), e
+
         assert [m["account_count"] for m in managers] == [3, 0], managers
 
         owned = list_accounts(managers[0]["id"])

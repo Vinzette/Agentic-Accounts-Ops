@@ -1,3 +1,13 @@
+---
+title: FieldAssist Pre-Call Briefing Agent
+emoji: 📋
+colorFrom: blue
+colorTo: indigo
+sdk: docker
+app_port: 7860
+pinned: false
+---
+
 # FieldAssist Agentic Accounts Ops — Pre-Call Briefing Agent
 
 Reads a FieldAssist account's raw data and produces a short pre-call briefing for the account manager: status, snapshot, why, who to talk to, next actions, and one thing to watch.

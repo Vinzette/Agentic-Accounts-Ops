@@ -1,0 +1,10 @@
+.venv/
+__pycache__/
+*.pyc
+frontend/node_modules/
+frontend/dist/
+.git/
+.env
+*.db
+.prep/
+DEEP_DIVE.md

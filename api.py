@@ -2,19 +2,22 @@
 
 import json
 import logging
+import re
 from collections import defaultdict
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 from pathlib import Path
 
 from dotenv import load_dotenv
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, HTTPException, Request, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, ValidationError
 
 import db
+import documents
+from extract import extract_account
 from graph import build_graph
 from models import AccountData
 from nodes import BRIEFING_PROMPT, MAX_ATTEMPTS, MODEL, prompt_version
@@ -26,6 +29,8 @@ FRONTEND_DIST = Path(__file__).parent / "frontend" / "dist"
 # ponytail: per-process, per-IP counter. Enough to stop one visitor draining the
 # API key; swap for a shared store if this ever runs on more than one worker.
 MAX_RUNS_PER_IP = 40
+# Decks carry images we never read; the text inside is what costs anything.
+MAX_UPLOAD_BYTES = 20 * 1024 * 1024
 _runs_by_ip: dict[str, int] = defaultdict(int)
 
 
@@ -53,10 +58,24 @@ class BriefingRequest(BaseModel):
     input_source: str = "form"
 
 
+class ManagerRequest(BaseModel):
+    name: str
+    region: str | None = None
+
+
+class ExtractRequest(BaseModel):
+    notes: str
+
+
 class AccountRequest(BaseModel):
     manager_id: int
-    slug: str
     data: dict
+    slug: str | None = None
+
+
+def _slugify(name: str) -> str:
+    """A filesystem- and URL-safe key for an account, e.g. 'Apex Logistics' -> 'apex_logistics'."""
+    return re.sub(r"[^a-z0-9]+", "_", name.lower()).strip("_") or "account"
 
 
 def _check_quota(request: Request) -> None:
@@ -179,35 +198,83 @@ async def stream_briefing(payload: BriefingRequest, request: Request) -> Streami
     )
 
 
+@app.post("/api/extract")
+def extract(payload: ExtractRequest, request: Request) -> dict:
+    """Messy notes to a structured draft. The caller reviews it before briefing."""
+    _check_quota(request)
+    if not payload.notes.strip():
+        raise HTTPException(400, "Paste some notes first.")
+    return extract_account(payload.notes).model_dump()
+
+
+@app.post("/api/extract/file")
+def extract_file(request: Request, file: UploadFile) -> dict:
+    """A PDF, deck, spreadsheet or notes file to a structured draft."""
+    _check_quota(request)
+
+    blob = file.file.read(MAX_UPLOAD_BYTES + 1)
+    if len(blob) > MAX_UPLOAD_BYTES:
+        raise HTTPException(413, f"That file is larger than {MAX_UPLOAD_BYTES // 1024 // 1024} MB.")
+
+    try:
+        extracted = documents.to_text(file.filename or "", blob)
+    except ValueError as e:
+        raise HTTPException(400, str(e)) from e
+
+    if not extracted.text.strip():
+        raise HTTPException(
+            400, "No readable text in that file. A scanned PDF would need OCR first."
+        )
+
+    return {
+        "account": extract_account(extracted.text).model_dump(),
+        "truncated": extracted.truncated,
+        "total_chars": extracted.total_chars,
+        "used_chars": len(extracted.text),
+    }
+
+
 @app.get("/api/health")
 async def health() -> dict:
     return {"ok": True, "model": MODEL}
 
 
 @app.get("/api/managers")
-async def managers() -> list[dict]:
+def managers() -> list[dict]:
     return db.list_managers()
 
 
+@app.post("/api/managers")
+def create_manager(payload: ManagerRequest) -> dict:
+    name = payload.name.strip()
+    if not name:
+        raise HTTPException(400, "A manager needs a name.")
+    try:
+        return db.create_manager(name, (payload.region or "").strip() or None)
+    except ValueError as e:
+        raise HTTPException(409, str(e)) from e
+
+
 @app.get("/api/accounts")
-async def accounts(manager_id: int | None = None) -> list[dict]:
+def accounts(manager_id: int | None = None) -> list[dict]:
     return db.list_accounts(manager_id)
 
 
 @app.post("/api/accounts")
-async def create_account(payload: AccountRequest) -> dict:
-    _validated(payload.data)
-    account_id = db.save_account(payload.manager_id, payload.slug, payload.data)
-    return db.get_account(account_id)
+def create_account(payload: AccountRequest) -> dict:
+    """Create the account, or update it if the slug already exists."""
+    account = _validated(payload.data)
+    slug = payload.slug or _slugify(account.account_name)
+    return db.get_account(db.save_account(payload.manager_id, slug, payload.data))
 
 
 @app.get("/api/runs")
-async def runs(limit: int = 50) -> list[dict]:
+def runs(limit: int = 50) -> list[dict]:
     return db.list_runs(limit)
 
 
 @app.get("/api/runs/{run_id}")
-async def run_detail(run_id: int) -> dict:
+def run_detail(run_id: int) -> dict:
     run = db.get_run(run_id)
     if run is None:
         raise HTTPException(404, f"No run #{run_id}")
@@ -215,7 +282,7 @@ async def run_detail(run_id: int) -> dict:
 
 
 @app.get("/api/prompt")
-async def prompt() -> dict:
+def prompt() -> dict:
     return {"version": prompt_version(), "text": BRIEFING_PROMPT.read_text()}
 
 

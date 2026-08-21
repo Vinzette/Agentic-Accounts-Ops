@@ -18,3 +18,7 @@ DEEP_DIVE.md
 .prep/
 notion.md 
 features.md
+# Frontend build
+node_modules/
+frontend/dist/
+CHECKLIST.md

@@ -47,6 +47,7 @@ Then let the remaining fields follow from that plan rather than deciding first a
 1. **status** — one of Healthy / At-Risk / Stalled.
 2. **snapshot** — account name, tier, and ARR in one short line, e.g. "Alder Snacks · Growth · $920K ARR".
 3. **why** — 2-3 signals from the data that led to that status. Every signal must end with a parenthetical citation, and what sits inside those brackets is **the data itself**, quoted or closely paraphrased. The bracket answers "where does this come from", never "what does it mean" — a reader has to be able to check the claim against the source file. Restate the figure in the brackets even when it already appears earlier in the sentence.
+   One bracket, one data point. If you are listing three figures in a single citation separated by semicolons, you have merged three signals into one — keep the strongest and let the others go. This gets read in thirty seconds before a call.
    - "ARR grew 31% year-over-year (from $700K to $920K)"
    - "Adoption is strong (82% of licensed seats are daily active users)"
    - "Adoption is collapsing (daily active field users fell from 60% to 35% over two quarters)"
