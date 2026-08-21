@@ -1,10 +1,4 @@
-"""Pydantic contracts for everything crossing a boundary.
-
-`AccountData` guards the way in — a data file, a form submission, or pasted
-notes — before any API call is made. `Briefing` and `PortfolioBrief` guard the
-way out: they are bound to the model's structured output, so the six fields
-come back typed and validated rather than parsed out of free text.
-"""
+"""Pydantic contracts for the data crossing into and out of the agent."""
 
 from enum import StrEnum
 
@@ -20,13 +14,7 @@ class AccountStatus(StrEnum):
 
 
 class AccountData(BaseModel):
-    """One account's raw data, from a file, a form, or pasted notes.
-
-    Only `account_name` is required. Real account records are patchy — an AM
-    typing one in from memory often won't know the NPS — and refusing to brief
-    an incomplete account is less useful than briefing it and saying plainly
-    what was missing.
-    """
+    """One account's raw data. Only `account_name` is required; real records are patchy."""
 
     account_name: str = Field(min_length=1)
     industry: str | None = None
@@ -45,13 +33,7 @@ class AccountData(BaseModel):
         return [name for name in AccountData.model_fields if not getattr(self, name)]
 
     def for_prompt(self) -> dict[str, str | list[str]]:
-        """Serialise for the LLM with absent fields marked explicitly.
-
-        Dropping the empty ones would let the model read absence as zero — "no
-        open issues" rather than "no record of them". Saying "not recorded"
-        keeps the difference visible, and the prompt already tells the model to
-        flag thin data rather than guess around it.
-        """
+        """Serialise for the LLM, marking absent fields so absence isn't read as zero."""
         return {name: (getattr(self, name) or NOT_RECORDED) for name in AccountData.model_fields}
 
 
@@ -69,10 +51,8 @@ class Briefing(BaseModel):
     )
     status: AccountStatus
     snapshot: str = Field(
-        # Field descriptions travel to the model inside the JSON schema, so any
-        # example here is a live few-shot example. It uses an invented account,
-        # like the ones in the prompt — a real one would hand that account its
-        # own answer.
+        # Descriptions reach the model inside the JSON schema, so examples here
+        # are live few-shot examples. Keep them invented, never a real account.
         description="Account name, tier, and ARR, e.g. 'Alder Snacks · Growth · $920K ARR'"
     )
     why: list[str] = Field(
@@ -96,12 +76,7 @@ class Briefing(BaseModel):
 
 
 class PortfolioBrief(BaseModel):
-    """A brief across every account one manager owns.
-
-    This is the view a single-account briefing structurally cannot produce: it
-    ranks the book, and it names things that are only visible by comparing
-    accounts against each other.
-    """
+    """A brief across every account one manager owns."""
 
     reasoning: str = Field(
         description=(

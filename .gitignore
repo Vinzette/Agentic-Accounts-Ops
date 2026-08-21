@@ -9,4 +9,12 @@ wheels/
 # Virtual environments
 .venv
 .env
+*.db
 FieldAssist_Agentic_Ops_Assignment.docx
+FieldAssist_Agentic_Ops_Assignment.pdf
+
+# Personal interview prep — not part of the submission
+DEEP_DIVE.md
+.prep/
+notion.md 
+features.md

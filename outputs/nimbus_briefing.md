@@ -1,6 +1,6 @@
 # Pre-Call Briefing: Nimbus Confectionery
 
-**Generated:** 2026-08-19 06:56 UTC
+**Generated:** 2026-08-21 13:14 UTC
 
 ---
 
@@ -9,18 +9,19 @@
 **Snapshot:** Nimbus Confectionery · Strategic · $2.1M ARR
 
 ### Why
-- Revenue is growing strongly year-over-year ($2.1M ARR, up from $1.6M a year ago)
-- Adoption is very high among licensed users (daily active field users ~88% of licensed seats)
-- They are both happy and expansion-minded (NPS 9 — advocate; asked about expanding Image Recognition to their other 3 markets)
+- ARR grew sharply year-over-year (from $1.6M to $2.1M)
+- Adoption is very strong (daily active field users ~88% of licensed seats)
+- They are actively exploring expansion of a paid module (Image Recognition rolled out in 2 of 5 markets, and they asked about expanding it to the other 3 markets)
 
 ### Who to Talk To
-- VP Sales (executive sponsor, very engaged — anchors renewal and expansion decisions)
-- New Regional Head in SE Asia (not yet met — key for regional Image Recognition rollout and local adoption)
+- VP Sales, executive sponsor — very engaged and the key decision-maker for expansion and early renewal discussions
+- National Field Ops lead, day-to-day champion — recently promoted and central to operationalizing an Image Recognition rollout
+- New Regional Head in SE Asia — not yet met and likely critical stakeholder for extending Image Recognition into that region
 
 ### Next Actions
-1. Scope the Image Recognition rollout for the 3 remaining markets ahead of the 5‑month renewal
-2. Book an introductory call with the new Regional Head in SE Asia to understand their priorities and share current results
-3. Draft an early renewal / multi‑year proposal leveraging the ARR growth, 88% daily active usage, and NPS 9 as the value case
+1. Scope an Image Recognition rollout plan and commercial proposal for the 3 non-live markets
+2. Set up a working session with the National Field Ops lead to capture outcomes from the last QBR and align on field priorities for the next 6–12 months
+3. Introduce yourself to the new Regional Head in SE Asia and walk them through current results from the 2 Image Recognition markets and the Analytics dashboard usage
 
 ### ⚠️ One Thing to Watch
-Watch for who emerges under the promoted National Field Ops lead as the new day-to-day operational owner, so the relationship doesn’t rest on a single champion whose role is shifting upward.
+How quickly and positively SE Asia engages with the platform, given the new Regional Head and the pending decision on rolling Image Recognition into that and other remaining markets.

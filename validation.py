@@ -1,30 +1,20 @@
-"""Semantic checks on a generated briefing.
+"""Semantic checks on a generated briefing: is what it says supported by the source data?
 
-Pydantic already guarantees the briefing's *shape* — status is one of three
-values, `why` holds 2-3 items, nothing is missing. These checks ask a different
-question: is what it says actually supported by the account data it was given?
-
-Pure functions, no LangGraph or LLM knowledge. `nodes.validate_output` wires
-them into the graph and decides what to do about the results.
-
-Run `python validation.py` for a self-check.
+Pydantic already covers shape. These are pure functions — `nodes.validate_output`
+wires them in. Run `python validation.py` for a self-check.
 """
 
 import re
 
 from models import NOT_RECORDED, AccountStatus, Briefing
 
-# Contents of each (...) in a signal. The prompt requires every `why` signal to
-# end in one, holding the source data the claim rests on.
 PARENTHETICAL = re.compile(r"\(([^)]*)\)")
 
-# A figure: digits, optional thousands separators and decimals, optionally
-# followed by % or an M/K/B magnitude suffix. The negative lookahead stops
-# "3 markets" from being read as the figure "3 m".
+# Digits with optional separators, decimals and a %/M/K/B suffix. The negative
+# lookahead stops "3 markets" being read as the figure "3 m".
 FIGURE = re.compile(r"\d[\d,]*(?:\.\d+)?(?:\s*%|\s*[mkbMKB](?![a-zA-Z]))?")
 
-# Words that shouldn't co-occur with a Healthy verdict. Deliberately crude,
-# which is why hits are warnings rather than grounds for regenerating.
+# Crude by design, which is why hits are warnings rather than grounds to retry.
 NEGATIVE_MARKERS = ("declin", "dropp", "left", "overrun", "unengaged", "churn", "stalled")
 
 
@@ -36,9 +26,8 @@ def normalise(text: str) -> str:
 def flatten(account_data: dict) -> str:
     """Squash the account record into one searchable string.
 
-    Keys are included, not only values. The model is shown the field names too,
-    so a citation like "last_90_days: not recorded" quotes the record faithfully
-    — and leaving keys out made the "90" in that field name look fabricated.
+    Keys are included: the model sees field names too, so "last_90_days" is a
+    faithful citation and its "90" must not read as fabricated.
     """
     parts: list[str] = []
     for key, value in account_data.items():
@@ -51,11 +40,10 @@ def flatten(account_data: dict) -> str:
 
 
 def ungrounded_figures(text: str, haystack: str) -> list[str]:
-    """Figures in `text` that don't appear in `haystack` (already normalised).
+    """Figures in `text` absent from `haystack` (already normalised).
 
-    Substring matching is deliberately lenient: it reliably catches an invented
-    figure, and won't quibble that "120" also occurs inside "2,120". Catching
-    fabrication is the job; being pedantic about it would only cause thrash.
+    Substring matching is lenient on purpose: catching invented figures matters,
+    quibbling that "120" also occurs in "2,120" would only cause thrash.
     """
     return [figure for figure in FIGURE.findall(text) if normalise(figure) not in haystack]
 
@@ -63,10 +51,8 @@ def ungrounded_figures(text: str, haystack: str) -> list[str]:
 def _check_citations(briefing: Briefing, haystack: str) -> list[str]:
     """Every figure cited inside brackets must exist in the source data.
 
-    Only the bracketed text is scanned, never the whole signal. The prompt makes
-    brackets hold source data while the sentence around them may interpret it —
-    "ARR grew 31% year-over-year (from $1.6M to $2.1M)" is correct even though
-    31% is computed and appears nowhere in the account record.
+    Scan the bracketed text only, never the whole signal — the sentence around
+    the brackets may hold computed figures the source never contained.
     """
     errors: list[str] = []
     for signal in briefing.why:
@@ -98,11 +84,7 @@ def _check_snapshot(briefing: Briefing, account_data: dict) -> list[str]:
 
 
 def _check_status_consistency(briefing: Briefing) -> list[str]:
-    """Flag a Healthy verdict whose own evidence reads negative.
-
-    A warning, never an error. Substring matching is too blunt to justify a
-    regeneration — a healthy account can legitimately mention a person who left.
-    """
+    """Flag a Healthy verdict whose own evidence reads negative. Warning, never an error."""
     if briefing.status is not AccountStatus.HEALTHY:
         return []
 
@@ -120,8 +102,7 @@ def _check_status_consistency(briefing: Briefing) -> list[str]:
 def check_briefing(briefing: Briefing, account_data: dict) -> tuple[list[str], list[str]]:
     """Check a briefing against its source data.
 
-    Returns `(errors, warnings)`. Errors are factual failures worth regenerating
-    for; warnings are heuristic observations that ship alongside the briefing.
+    Returns `(errors, warnings)`: errors are worth regenerating for, warnings ship as-is.
     """
     haystack = normalise(flatten(account_data))
     errors = _check_citations(briefing, haystack) + _check_snapshot(briefing, account_data)

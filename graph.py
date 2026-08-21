@@ -1,12 +1,8 @@
-"""The briefing pipeline, wired as a LangGraph StateGraph.
+"""The briefing pipeline as a LangGraph StateGraph.
 
-    load_data → generate_briefing → validate_output → save_briefing
-                       ▲                   │
-                       └─── regenerate ────┘
-
-The cycle is the point. A briefing whose citations don't hold up goes back to
-the model with the specific failures attached, rather than reaching an account
-manager unchecked.
+load_data → generate_briefing → validate_output → persist_run → save_briefing
+                   ▲                   │
+                   └─── regenerate ────┘
 """
 
 from typing import TypedDict
@@ -18,6 +14,7 @@ from nodes import (
     MAX_ATTEMPTS,
     generate_briefing,
     load_data,
+    persist_run,
     save_briefing,
     validate_output,
 )
@@ -26,9 +23,12 @@ from nodes import (
 class GraphState(TypedDict, total=False):
     """Everything the pipeline accumulates. `total=False` so nodes can fill it in stages."""
 
-    # Input — one of these two is supplied by the caller.
-    account_name: str
+    # Input. The CLI supplies account_slug (names the file to read, and the
+    # files to write); the web path supplies account_data directly and no slug.
+    account_slug: str
     account_data: dict
+    account_id: int | None
+    input_source: str
 
     # Set by load_data.
     missing_fields: list[str]
@@ -44,23 +44,22 @@ class GraphState(TypedDict, total=False):
     validation_errors: list[str]
     validation_warnings: list[str]
 
-    # Set by save_briefing.
+    # Set by persist_run and save_briefing.
+    run_id: int | None
     markdown: str
     output_path: str
 
 
 def route_after_validation(state: GraphState) -> str:
-    """Ship it, or send it back to the model with the failures attached.
+    """Ship it, or send it back with the failures attached.
 
-    Giving up after MAX_ATTEMPTS is deliberate: the briefing ships carrying a
-    visible "unverified" note. This is advisory work with a human owner, so a
-    flagged answer is more useful than no answer.
+    After MAX_ATTEMPTS it ships anyway, flagged — a caveated answer beats none.
     """
     if state.get("validation_passed"):
-        return "save_briefing"
+        return "persist_run"
     if state.get("attempts", 0) < MAX_ATTEMPTS:
         return "generate_briefing"
-    return "save_briefing"
+    return "persist_run"
 
 
 def build_graph():
@@ -69,6 +68,7 @@ def build_graph():
     graph.add_node("load_data", load_data)
     graph.add_node("generate_briefing", generate_briefing)
     graph.add_node("validate_output", validate_output)
+    graph.add_node("persist_run", persist_run)
     graph.add_node("save_briefing", save_briefing)
 
     graph.add_edge(START, "load_data")
@@ -77,8 +77,9 @@ def build_graph():
     graph.add_conditional_edges(
         "validate_output",
         route_after_validation,
-        ["generate_briefing", "save_briefing"],
+        ["generate_briefing", "persist_run"],
     )
+    graph.add_edge("persist_run", "save_briefing")
     graph.add_edge("save_briefing", END)
 
     return graph.compile()

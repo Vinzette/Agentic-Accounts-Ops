@@ -4,6 +4,7 @@ import argparse
 
 from dotenv import load_dotenv
 
+import db
 from graph import build_graph
 
 ACCOUNTS = ["nimbus", "corner_beverages", "zephyr"]
@@ -11,6 +12,7 @@ ACCOUNTS = ["nimbus", "corner_beverages", "zephyr"]
 
 def main() -> None:
     load_dotenv()
+    db.init_db()
 
     parser = argparse.ArgumentParser(description="Generate pre-call account briefing(s).")
     parser.add_argument(
@@ -24,7 +26,7 @@ def main() -> None:
 
     app = build_graph()
     for account_name in args.account:
-        result = app.invoke({"account_name": account_name})
+        result = app.invoke({"account_slug": account_name})
 
         print(result["markdown"])
         if (attempts := result.get("attempts", 1)) > 1:
