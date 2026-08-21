@@ -1,35 +1,143 @@
-from enum import Enum
+"""Pydantic contracts for everything crossing a boundary.
+
+`AccountData` guards the way in — a data file, a form submission, or pasted
+notes — before any API call is made. `Briefing` and `PortfolioBrief` guard the
+way out: they are bound to the model's structured output, so the six fields
+come back typed and validated rather than parsed out of free text.
+"""
+
+from enum import StrEnum
 
 from pydantic import BaseModel, Field
 
+NOT_RECORDED = "not recorded"
 
-class AccountStatus(str, Enum):
+
+class AccountStatus(StrEnum):
     HEALTHY = "Healthy"
     AT_RISK = "At-Risk"
     STALLED = "Stalled"
 
 
 class AccountData(BaseModel):
-    """Contract for a data/{account}.json file — validated before it's sent to the LLM."""
+    """One account's raw data, from a file, a form, or pasted notes.
 
-    account_name: str
-    industry: str
-    tier: str
-    arr: str
-    products_in_use: list[str] = Field(min_length=1)
-    adoption: str
-    key_people: list[str] = Field(min_length=1)
-    last_90_days: list[str] = Field(min_length=1)
-    open_issues: str
-    renewal: str
-    nps: str
+    Only `account_name` is required. Real account records are patchy — an AM
+    typing one in from memory often won't know the NPS — and refusing to brief
+    an incomplete account is less useful than briefing it and saying plainly
+    what was missing.
+    """
+
+    account_name: str = Field(min_length=1)
+    industry: str | None = None
+    tier: str | None = None
+    arr: str | None = None
+    products_in_use: list[str] = Field(default_factory=list)
+    adoption: str | None = None
+    key_people: list[str] = Field(default_factory=list)
+    last_90_days: list[str] = Field(default_factory=list)
+    open_issues: str | None = None
+    renewal: str | None = None
+    nps: str | None = None
+
+    def missing_fields(self) -> list[str]:
+        """Fields with nothing in them, for the completeness note on the briefing."""
+        return [name for name in AccountData.model_fields if not getattr(self, name)]
+
+    def for_prompt(self) -> dict[str, str | list[str]]:
+        """Serialise for the LLM with absent fields marked explicitly.
+
+        Dropping the empty ones would let the model read absence as zero — "no
+        open issues" rather than "no record of them". Saying "not recorded"
+        keeps the difference visible, and the prompt already tells the model to
+        flag thin data rather than guess around it.
+        """
+        return {name: (getattr(self, name) or NOT_RECORDED) for name in AccountData.model_fields}
 
 
 class Briefing(BaseModel):
-    reasoning: str = Field(description="Think step by step, before anything else: walk through the signals in the account data, weigh them against the Healthy/At-Risk/Stalled rubric, and explain which way they point and why. Write this first — the other fields should follow from this reasoning, not the other way around. Internal only, never shown to the account manager.")
+    """The six-field pre-call briefing, plus the reasoning that produced it."""
+
+    reasoning: str = Field(
+        description=(
+            "Think step by step, before anything else: walk through the signals in "
+            "the account data, weigh them against the Healthy/At-Risk/Stalled rubric, "
+            "and explain which way they point and why. Write this first — the other "
+            "fields should follow from this reasoning, not the other way around. "
+            "Internal only, never shown to the account manager."
+        )
+    )
     status: AccountStatus
-    snapshot: str = Field(description="Account name, tier, and ARR, e.g. 'Nimbus Confectionery · Strategic · $2.1M ARR'")
-    why: list[str] = Field(min_length=2, max_length=3, description="2-3 signals from the data that led to this status, each citing the exact data point in parentheses")
-    who_to_talk_to: list[str] = Field(min_length=1, description="Key person(s) for the next conversation, with role and why they matter")
-    next_actions: list[str] = Field(min_length=2, max_length=3, description="2-3 specific, concrete things the account manager should do next")
+    snapshot: str = Field(
+        description=(
+            "Account name, tier, and ARR, e.g. 'Nimbus Confectionery · Strategic · $2.1M ARR'"
+        )
+    )
+    why: list[str] = Field(
+        min_length=2,
+        max_length=3,
+        description=(
+            "2-3 signals from the data that led to this status, each citing the "
+            "exact data point in parentheses"
+        ),
+    )
+    who_to_talk_to: list[str] = Field(
+        min_length=1,
+        description=("Key person(s) for the next conversation, with role and why they matter"),
+    )
+    next_actions: list[str] = Field(
+        min_length=2,
+        max_length=3,
+        description="2-3 specific, concrete things the account manager should do next",
+    )
     one_thing_to_watch: str = Field(description="The single biggest risk or opportunity")
+
+
+class PortfolioBrief(BaseModel):
+    """A brief across every account one manager owns.
+
+    This is the view a single-account briefing structurally cannot produce: it
+    ranks the book, and it names things that are only visible by comparing
+    accounts against each other.
+    """
+
+    reasoning: str = Field(
+        description=(
+            "Think step by step, before anything else: compare the accounts against "
+            "each other, note where they rhyme and where they diverge, and work out "
+            "where this manager's week should actually go. Write this first. "
+            "Internal only, never shown to the account manager."
+        )
+    )
+    headline: str = Field(
+        description=(
+            "One line on the state of the book, e.g. '2 of 3 accounts need attention this week'"
+        )
+    )
+    priority_order: list[str] = Field(
+        min_length=1,
+        description=(
+            "The accounts ranked by how urgently they need this manager, each with "
+            "one line on why it sits there. Lead with the most urgent."
+        ),
+    )
+    cross_account_patterns: list[str] = Field(
+        default_factory=list,
+        description=(
+            "Things true across two or more accounts that no single briefing could "
+            "see — a product bought but never rolled out at several, the same missing "
+            "role, a shared renewal crunch. Name the accounts involved. Return an "
+            "empty list if there genuinely isn't one; do not invent a pattern to fill "
+            "this field."
+        ),
+    )
+    where_your_week_goes: list[str] = Field(
+        min_length=2,
+        max_length=3,
+        description=(
+            "2-3 concrete things to do across the whole book this week, in priority order"
+        ),
+    )
+    portfolio_risk: str = Field(
+        description="The single biggest risk across all accounts taken together"
+    )
