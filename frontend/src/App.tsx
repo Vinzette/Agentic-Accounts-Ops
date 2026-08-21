@@ -4,6 +4,8 @@ import { BriefingPanel } from './components/BriefingPanel'
 import { ModeTabs, PastePanel, UploadPanel, type Mode } from './components/InputModes'
 import { ManagerPicker } from './components/ManagerPicker'
 import { PortfolioView } from './components/PortfolioView'
+import { HowItWorks } from './components/HowItWorks'
+import { RunLog } from './components/RunLog'
 import { BriefingSkeleton, PipelineStream } from './components/PipelineStream'
 import { getAccounts, getManagers, saveAccount, streamBriefing } from './lib/api'
 import type { Account, AccountData, Manager, NodeEvent, ResultEvent } from './types'
@@ -13,6 +15,8 @@ const NEW_ACCOUNT = 'new'
 const TABS = [
   { id: 'briefing', label: 'Briefing' },
   { id: 'portfolio', label: 'Portfolio' },
+  { id: 'runs', label: 'Run log' },
+  { id: 'how', label: 'How it works' },
 ] as const
 
 type Tab = (typeof TABS)[number]['id']
@@ -170,6 +174,11 @@ export default function App() {
         {tab === 'portfolio' && (
           <PortfolioView manager={managers.find((m) => m.id === managerId)} />
         )}
+
+        {/* Remounted on each visit so it always shows the latest runs. */}
+        {tab === 'runs' && <RunLog />}
+
+        {tab === 'how' && <HowItWorks />}
 
         <div
           className={`grid gap-6 lg:grid-cols-[minmax(0,380px)_minmax(0,1fr)] ${

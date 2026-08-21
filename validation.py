@@ -18,6 +18,35 @@ FIGURE = re.compile(r"\d[\d,]*(?:\.\d+)?(?:\s*%|\s*[mkbMKB](?![a-zA-Z]))?")
 NEGATIVE_MARKERS = ("declin", "dropp", "left", "overrun", "unengaged", "churn", "stalled")
 
 
+# What each check does and whether failing it costs a regeneration. Kept here so
+# anything describing the checks describes the ones that actually run.
+CHECKS = [
+    {
+        "name": "Citation grounding",
+        "detail": "Every figure cited inside brackets must appear in the account data.",
+        "on_failure": "regenerates",
+    },
+    {
+        "name": "Snapshot ARR",
+        "detail": "The ARR in the snapshot line must match the ARR on record.",
+        "on_failure": "regenerates",
+    },
+    {
+        "name": "Missing citation",
+        "detail": "Every signal has to carry a parenthetical citation.",
+        "on_failure": "regenerates",
+    },
+    {
+        "name": "Status contradiction",
+        "detail": (
+            "A Healthy verdict whose own supporting signals read negative. Deliberately "
+            "crude, so it never drives a retry."
+        ),
+        "on_failure": "warns",
+    },
+]
+
+
 def normalise(text: str) -> str:
     """Strip formatting noise so "~$2,000" and "$2000" compare equal."""
     return re.sub(r"[\s,~$]", "", text).lower()

@@ -2,7 +2,10 @@ import type {
   Account,
   AccountData,
   Manager,
+  Internals,
+  Pipeline,
   PortfolioEvent,
+  PromptDoc,
   RunDetail,
   RunSummary,
   StreamEvent,
@@ -39,8 +42,9 @@ export async function createManager(name: string, region: string): Promise<Manag
 
 export const getRuns = () => get<RunSummary[]>('/api/runs')
 export const getRun = (id: number) => get<RunDetail>(`/api/runs/${id}`)
-export const getPrompt = () => get<{ version: string; text: string }>('/api/prompt')
-export const getPipeline = () => get<{ mermaid: string }>('/api/pipeline')
+export const getPrompts = () => get<PromptDoc[]>('/api/prompts')
+export const getInternals = () => get<Internals>('/api/internals')
+export const getPipeline = () => get<Pipeline>('/api/pipeline')
 
 /** A PDF, deck, spreadsheet or notes file to a structured draft. */
 export async function uploadAccountFile(file: File): Promise<UploadResult> {

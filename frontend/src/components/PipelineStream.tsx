@@ -1,13 +1,6 @@
+import { NODE_LABELS } from '../lib/nodeLabels'
 import { useElapsed } from '../lib/useElapsed'
 import type { NodeEvent } from '../types'
-
-const LABELS: Record<string, string> = {
-  load_data: 'Reading the account data',
-  generate_briefing: 'Writing the briefing',
-  validate_output: 'Checking every citation against the data',
-  persist_run: 'Recording the run',
-  save_briefing: 'Done',
-}
 
 function Icon({ status }: { status: NodeEvent['status'] }) {
   if (status === 'running') {
@@ -52,7 +45,7 @@ export function PipelineStream({ steps }: { steps: NodeEvent[] }) {
                       : 'text-slate-700'
                 }`}
               >
-                <span>{LABELS[step.node] ?? step.node}</span>
+                <span>{NODE_LABELS[step.node] ?? step.node}</span>
                 {running && elapsed > 0 && (
                   <span className="shrink-0 text-xs text-slate-400 tabular-nums">{elapsed}s</span>
                 )}

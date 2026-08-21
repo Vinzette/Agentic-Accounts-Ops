@@ -99,6 +99,27 @@ export interface RunDetail extends RunSummary {
   raw_response: string | null
 }
 
+export interface Pipeline {
+  nodes: string[]
+  edges: { source: string; target: string; conditional: boolean }[]
+}
+
+export interface PromptDoc {
+  name: string
+  file: string
+  purpose: string
+  version: string
+  text: string
+}
+
+export interface Internals {
+  model: string
+  temperature: number
+  max_attempts: number
+  checks: { name: string; detail: string; on_failure: 'regenerates' | 'warns' }[]
+  briefing_schema: { properties: Record<string, { description?: string; type?: string }> }
+}
+
 export interface PortfolioBriefData {
   reasoning: string
   headline: string

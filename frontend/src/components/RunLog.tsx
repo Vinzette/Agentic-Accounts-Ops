@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { getRun, getRuns } from '../lib/api'
 import type { RunDetail, RunSummary } from '../types'
-import { StatusBadge } from './StatusBadge'
 
 const SOURCE_LABELS: Record<string, string> = {
   file: 'CLI',

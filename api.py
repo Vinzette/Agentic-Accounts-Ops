@@ -1,5 +1,6 @@
 """FastAPI backend: the briefing agent over HTTP, plus the built React app."""
 
+import hashlib
 import json
 import logging
 import re
@@ -19,9 +20,10 @@ import db
 import documents
 from extract import extract_account
 from graph import build_graph
-from models import AccountData
-from nodes import BRIEFING_PROMPT, MAX_ATTEMPTS, MODEL, prompt_version
+from models import AccountData, Briefing
+from nodes import MAX_ATTEMPTS, MODEL, PROMPTS_DIR
 from portfolio import build_portfolio_graph
+from validation import CHECKS
 
 log = logging.getLogger(__name__)
 
@@ -357,15 +359,55 @@ def run_detail(run_id: int) -> dict:
     return run
 
 
-@app.get("/api/prompt")
-def prompt() -> dict:
-    return {"version": prompt_version(), "text": BRIEFING_PROMPT.read_text()}
+PROMPTS = [
+    ("Briefing", "briefing_prompt.md", "Turns one account's data into the six-field briefing."),
+    ("Extraction", "extraction_prompt.md", "Turns messy notes or an uploaded file into a record."),
+    ("Portfolio", "portfolio_prompt.md", "Compares a manager's whole book and ranks the week."),
+]
+
+
+@app.get("/api/prompts")
+def prompts() -> list[dict]:
+    """Every prompt the system sends, with the version hash stamped on each run."""
+    out = []
+    for name, filename, purpose in PROMPTS:
+        text = (PROMPTS_DIR / filename).read_text()
+        out.append(
+            {
+                "name": name,
+                "file": filename,
+                "purpose": purpose,
+                "version": hashlib.sha256(text.encode()).hexdigest()[:12],
+                "text": text,
+            }
+        )
+    return out
+
+
+@app.get("/api/internals")
+def internals() -> dict:
+    """Model settings, the checks that run, and the shape the model must return."""
+    return {
+        "model": MODEL,
+        "temperature": 0,
+        "max_attempts": MAX_ATTEMPTS,
+        "checks": CHECKS,
+        "briefing_schema": Briefing.model_json_schema(),
+    }
 
 
 @app.get("/api/pipeline")
 async def pipeline(request: Request) -> dict:
+    """The compiled graph, as data. Drawn by the client, so it can't drift from the code."""
     graph = request.app.state.graph.get_graph()
-    return {"mermaid": graph.draw_mermaid()}
+    return {
+        "nodes": [n for n in graph.nodes if not n.startswith("__")],
+        "edges": [
+            {"source": e.source, "target": e.target, "conditional": bool(e.conditional)}
+            for e in graph.edges
+            if not e.source.startswith("__") and not e.target.startswith("__")
+        ],
+    }
 
 
 # Mounted last so /api/* always wins. Absent until the frontend is built.
