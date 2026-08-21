@@ -69,9 +69,11 @@ class Briefing(BaseModel):
     )
     status: AccountStatus
     snapshot: str = Field(
-        description=(
-            "Account name, tier, and ARR, e.g. 'Nimbus Confectionery · Strategic · $2.1M ARR'"
-        )
+        # Field descriptions travel to the model inside the JSON schema, so any
+        # example here is a live few-shot example. It uses an invented account,
+        # like the ones in the prompt — a real one would hand that account its
+        # own answer.
+        description="Account name, tier, and ARR, e.g. 'Alder Snacks · Growth · $920K ARR'"
     )
     why: list[str] = Field(
         min_length=2,

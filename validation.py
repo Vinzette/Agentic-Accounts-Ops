@@ -34,9 +34,15 @@ def normalise(text: str) -> str:
 
 
 def flatten(account_data: dict) -> str:
-    """Squash every value in the account record into one searchable string."""
+    """Squash the account record into one searchable string.
+
+    Keys are included, not only values. The model is shown the field names too,
+    so a citation like "last_90_days: not recorded" quotes the record faithfully
+    — and leaving keys out made the "90" in that field name look fabricated.
+    """
     parts: list[str] = []
-    for value in account_data.values():
+    for key, value in account_data.items():
+        parts.append(str(key))
         if isinstance(value, list):
             parts.extend(str(item) for item in value)
         elif value is not None:
@@ -169,6 +175,13 @@ def _self_check() -> None:
     )
     assert errors == [], errors
     assert len(warnings) == 1 and "left" in warnings[0], warnings
+
+    # Field names are part of the record: "last_90_days" must not make "90" look invented.
+    errors, _ = check_briefing(
+        brief(why=["Nothing on file (last_90_days: not recorded)", "Adoption fine (~88%)"]),
+        {"account_name": "Thin Co", "last_90_days": [], "adoption": "~88% of seats"},
+    )
+    assert errors == [], errors
 
     # Sparse accounts skip the ARR check rather than failing it.
     errors, _ = check_briefing(brief(), {"account_name": "Thin Co", "arr": NOT_RECORDED})

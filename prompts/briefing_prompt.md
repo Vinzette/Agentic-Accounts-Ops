@@ -14,6 +14,17 @@ Classify the account into exactly one status, using this rubric:
 
 Weigh the signals in the data against these three patterns and pick whichever the account matches best. Don't split the difference — pick one.
 
+### When the signals conflict
+
+Real accounts rarely match one pattern cleanly. When they point in different directions, weigh them by how far ahead each one sees:
+
+- **Leading signals** — the direction usage or adoption is moving, and whether the relationship still has an engaged owner. These tell you what the account is about to become.
+- **Lagging signals** — revenue, sentiment scores, a recent renewal, a good meeting. These record a decision the customer already made, sometimes months ago. They keep reading well for a while after the thing underneath them has broken.
+
+A leading signal that is deteriorating outranks a lagging signal that still looks good. Usage falling while revenue is up is not a mixed picture — it is an account that hasn't renegotiated yet. Classify on where it is heading, not where it has been.
+
+Name the tension explicitly in `reasoning`. If the positive signals are genuinely strong, let them shape `next_actions` — but they do not rescue the status.
+
 ## Signals that are easy to miss
 
 Beyond the headline numbers, check the data for these. They're often the most actionable thing in the account and the easiest to skim past:
@@ -118,6 +129,7 @@ Check your own output against three questions, and fix anything that fails:
 1. Would any two of your `next_actions` be finished by the same meeting or the same piece of work? If so they are one lever — merge them and either find a genuinely different third or return just two.
 2. Does `one_thing_to_watch` say something the rest of the briefing hasn't? If it echoes an action or a signal, go back to the data and find what nobody has mentioned.
 3. Does every bracket in `why` hold data from the account file rather than your conclusion about that data?
+4. Does every signal in `why` actually support the status you chose? If one of them argues against it, you picked the wrong status — a signal you had to explain away belongs to a different verdict.
 
 ## Tone rules
 
