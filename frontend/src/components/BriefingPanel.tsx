@@ -85,7 +85,7 @@ export function BriefingPanel({ result }: { result: ResultEvent }) {
         </p>
       </Section>
 
-      <div>
+      <div className="space-y-2">
         <Accordion title="How it got there" subtitle="the model's reasoning">
           <p className="text-sm leading-relaxed whitespace-pre-wrap text-slate-600">
             {briefing.reasoning}

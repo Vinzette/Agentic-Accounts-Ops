@@ -2,6 +2,8 @@ import type {
   Account,
   AccountData,
   Manager,
+  PortfolioEvent,
+  RunDetail,
   RunSummary,
   StreamEvent,
   UploadResult,
@@ -36,6 +38,7 @@ export async function createManager(name: string, region: string): Promise<Manag
 }
 
 export const getRuns = () => get<RunSummary[]>('/api/runs')
+export const getRun = (id: number) => get<RunDetail>(`/api/runs/${id}`)
 export const getPrompt = () => get<{ version: string; text: string }>('/api/prompt')
 export const getPipeline = () => get<{ mermaid: string }>('/api/pipeline')
 
@@ -71,15 +74,12 @@ export async function extractAccount(notes: string): Promise<AccountData> {
 }
 
 /**
- * Stream a briefing, calling `onEvent` for each pipeline step as it happens.
+ * POST a body and read the SSE response, calling `onEvent` per frame.
  *
- * EventSource only speaks GET, so this reads the SSE body off fetch directly.
+ * EventSource only speaks GET, so this reads the stream off fetch directly.
  */
-export async function streamBriefing(
-  body: { account_data: AccountData; account_id?: number | null; input_source?: string },
-  onEvent: (event: StreamEvent) => void,
-): Promise<void> {
-  const res = await fetch('/api/briefings/stream', {
+async function stream<T>(path: string, body: unknown, onEvent: (event: T) => void): Promise<void> {
+  const res = await fetch(path, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body),
@@ -106,3 +106,13 @@ export async function streamBriefing(
     }
   }
 }
+
+/** Stream a briefing, one event per pipeline step. */
+export const streamBriefing = (
+  body: { account_data: AccountData; account_id?: number | null; input_source?: string },
+  onEvent: (event: StreamEvent) => void,
+) => stream<StreamEvent>('/api/briefings/stream', body, onEvent)
+
+/** Stream a portfolio brief: one event per account as the fan-out lands, then the result. */
+export const streamPortfolio = (managerId: number, onEvent: (event: PortfolioEvent) => void) =>
+  stream<PortfolioEvent>('/api/portfolio/stream', { manager_id: managerId }, onEvent)

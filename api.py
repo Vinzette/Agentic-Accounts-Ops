@@ -21,6 +21,7 @@ from extract import extract_account
 from graph import build_graph
 from models import AccountData
 from nodes import BRIEFING_PROMPT, MAX_ATTEMPTS, MODEL, prompt_version
+from portfolio import build_portfolio_graph
 
 log = logging.getLogger(__name__)
 
@@ -39,6 +40,7 @@ async def lifespan(app: FastAPI):
     load_dotenv()
     db.init_db()
     app.state.graph = build_graph()
+    app.state.portfolio = build_portfolio_graph()
     yield
 
 
@@ -56,6 +58,10 @@ class BriefingRequest(BaseModel):
     account_data: dict
     account_id: int | None = None
     input_source: str = "form"
+
+
+class PortfolioRequest(BaseModel):
+    manager_id: int
 
 
 class ManagerRequest(BaseModel):
@@ -179,6 +185,55 @@ async def _briefing_events(graph, payload: BriefingRequest) -> AsyncIterator[str
     )
 
 
+async def _portfolio_events(graph, manager: dict, accounts: list[dict]) -> AsyncIterator[str]:
+    """Stream per-account progress during the fan-out, then the portfolio brief."""
+    done = 0
+    total = len(accounts)
+    state: dict = {}
+
+    try:
+        async for event in graph.astream(
+            {"manager_name": manager["name"], "accounts": accounts}, stream_mode="debug"
+        ):
+            node = event.get("payload", {}).get("name")
+            if event["type"] != "task_result" or not node:
+                continue
+
+            result = event["payload"].get("result") or {}
+            if node == "brief_one":
+                done += 1
+                briefed = (result.get("briefings") or [{}])[0]
+                yield _sse(
+                    {
+                        "type": "account",
+                        "done": done,
+                        "total": total,
+                        "account_name": briefed.get("account_name"),
+                        "status": briefed.get("status"),
+                    }
+                )
+            state.setdefault("briefings", []).extend(result.get("briefings") or [])
+            state.update({k: v for k, v in result.items() if k != "briefings"})
+    except Exception as e:
+        log.exception("Portfolio run failed")
+        yield _sse({"type": "error", "message": str(e)})
+        return
+
+    brief = state.get("portfolio_brief")
+    if brief is None:
+        yield _sse({"type": "error", "message": "The model did not return a portfolio brief."})
+        return
+
+    yield _sse(
+        {
+            "type": "result",
+            "manager": manager["name"],
+            "portfolio_brief": brief.model_dump(mode="json"),
+            "briefings": sorted(state["briefings"], key=lambda b: b["account_name"]),
+        }
+    )
+
+
 SSE_HEADERS = {
     "Cache-Control": "no-cache",
     "Connection": "keep-alive",
@@ -193,6 +248,27 @@ async def stream_briefing(payload: BriefingRequest, request: Request) -> Streami
     _validated(payload.account_data)
     return StreamingResponse(
         _briefing_events(request.app.state.graph, payload),
+        media_type="text/event-stream",
+        headers=SSE_HEADERS,
+    )
+
+
+@app.post("/api/portfolio/stream")
+def stream_portfolio(payload: PortfolioRequest, request: Request) -> StreamingResponse:
+    manager = next((m for m in db.list_managers() if m["id"] == payload.manager_id), None)
+    if manager is None:
+        raise HTTPException(404, f"No manager #{payload.manager_id}")
+
+    accounts = db.list_accounts(payload.manager_id)
+    if not accounts:
+        raise HTTPException(400, f"{manager['name']} has no accounts yet.")
+
+    # One briefing run per account, so the cap has to cover all of them.
+    for _ in accounts:
+        _check_quota(request)
+
+    return StreamingResponse(
+        _portfolio_events(request.app.state.portfolio, manager, accounts),
         media_type="text/event-stream",
         headers=SSE_HEADERS,
     )

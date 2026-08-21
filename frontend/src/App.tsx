@@ -3,11 +3,19 @@ import { AccountForm, EMPTY_ACCOUNT } from './components/AccountForm'
 import { BriefingPanel } from './components/BriefingPanel'
 import { ModeTabs, PastePanel, UploadPanel, type Mode } from './components/InputModes'
 import { ManagerPicker } from './components/ManagerPicker'
+import { PortfolioView } from './components/PortfolioView'
 import { BriefingSkeleton, PipelineStream } from './components/PipelineStream'
 import { getAccounts, getManagers, saveAccount, streamBriefing } from './lib/api'
 import type { Account, AccountData, Manager, NodeEvent, ResultEvent } from './types'
 
 const NEW_ACCOUNT = 'new'
+
+const TABS = [
+  { id: 'briefing', label: 'Briefing' },
+  { id: 'portfolio', label: 'Portfolio' },
+] as const
+
+type Tab = (typeof TABS)[number]['id']
 
 /** A "running" step is replaced in place when its result arrives; the loop appends. */
 function applyStep(steps: NodeEvent[], event: NodeEvent): NodeEvent[] {
@@ -25,6 +33,7 @@ export default function App() {
   const [selected, setSelected] = useState<string>(NEW_ACCOUNT)
   const [form, setForm] = useState<AccountData>(EMPTY_ACCOUNT)
   const [mode, setMode] = useState<Mode>('form')
+  const [tab, setTab] = useState<Tab>('briefing')
   const [notice, setNotice] = useState<string | null>(null)
   const [saving, setSaving] = useState(false)
 
@@ -139,8 +148,34 @@ export default function App() {
         </div>
       </header>
 
+      <nav className="border-b border-slate-200 bg-white">
+        <div className="mx-auto flex max-w-7xl gap-6 px-4 lg:px-6">
+          {TABS.map((t) => (
+            <button
+              key={t.id}
+              onClick={() => setTab(t.id)}
+              className={`-mb-px border-b-2 px-1 py-2.5 text-sm font-medium transition ${
+                tab === t.id
+                  ? 'border-slate-900 text-slate-900'
+                  : 'border-transparent text-slate-500 hover:text-slate-800'
+              }`}
+            >
+              {t.label}
+            </button>
+          ))}
+        </div>
+      </nav>
+
       <main className="mx-auto max-w-7xl px-4 py-6 lg:px-6">
-        <div className="grid gap-6 lg:grid-cols-[minmax(0,380px)_minmax(0,1fr)]">
+        {tab === 'portfolio' && (
+          <PortfolioView manager={managers.find((m) => m.id === managerId)} />
+        )}
+
+        <div
+          className={`grid gap-6 lg:grid-cols-[minmax(0,380px)_minmax(0,1fr)] ${
+            tab === 'briefing' ? '' : 'hidden'
+          }`}
+        >
           <aside className="rounded-lg border border-slate-200 bg-white p-4">
             <label className="mb-1 block text-xs font-medium tracking-wide text-slate-600 uppercase">
               Account

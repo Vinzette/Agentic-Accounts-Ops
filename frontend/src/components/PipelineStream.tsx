@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useElapsed } from '../lib/useElapsed'
 import type { NodeEvent } from '../types'
 
 const LABELS: Record<string, string> = {
@@ -27,21 +27,6 @@ function Icon({ status }: { status: NodeEvent['status'] }) {
       {failed ? '✗' : '✓'}
     </span>
   )
-}
-
-/** Seconds since `key` last changed. Reassures during the long model call. */
-function useElapsed(key: number | null) {
-  const [seconds, setSeconds] = useState(0)
-
-  useEffect(() => {
-    if (key === null) return
-    setSeconds(0)
-    const started = Date.now()
-    const id = setInterval(() => setSeconds(Math.floor((Date.now() - started) / 1000)), 500)
-    return () => clearInterval(id)
-  }, [key])
-
-  return seconds
 }
 
 export function PipelineStream({ steps }: { steps: NodeEvent[] }) {

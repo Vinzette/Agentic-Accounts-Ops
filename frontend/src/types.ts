@@ -92,3 +92,48 @@ export interface RunSummary {
   validation_errors: string[]
   validation_warnings: string[]
 }
+
+export interface RunDetail extends RunSummary {
+  input_data: AccountData
+  parsed_briefing: Briefing
+  raw_response: string | null
+}
+
+export interface PortfolioBriefData {
+  reasoning: string
+  headline: string
+  priority_order: string[]
+  cross_account_patterns: string[]
+  where_your_week_goes: string[]
+  portfolio_risk: string
+}
+
+/** One account finishing inside the fan-out. */
+export interface PortfolioAccountEvent {
+  type: 'account'
+  done: number
+  total: number
+  account_name: string
+  status: Status
+}
+
+export interface PortfolioResultEvent {
+  type: 'result'
+  manager: string
+  portfolio_brief: PortfolioBriefData
+  briefings: {
+    account_name: string
+    status: Status
+    snapshot: string
+    reasoning: string
+    why: string[]
+    who_to_talk_to: string[]
+    next_actions: string[]
+    one_thing_to_watch: string
+    attempts: number
+    validation_passed: boolean
+    run_id: number | null
+  }[]
+}
+
+export type PortfolioEvent = PortfolioAccountEvent | PortfolioResultEvent | ErrorEvent

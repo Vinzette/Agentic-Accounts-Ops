@@ -78,30 +78,23 @@ export function ManagerPicker({
     )
   }
 
-  const selected = managers.find((m) => m.id === managerId)
-
   return (
     <div className="flex items-center gap-2">
-      <div className="text-right">
-        <select
-          className="rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm"
-          value={managerId ?? ''}
-          onChange={(e) => onSelect(Number(e.target.value))}
-        >
-          {managers.map((m) => (
-            <option key={m.id} value={m.id}>
-              {m.name} · {m.account_count} account{m.account_count === 1 ? '' : 's'}
-            </option>
-          ))}
-        </select>
-        {selected?.region && (
-          <p className="mt-0.5 pr-1 text-xs text-slate-500">{selected.region}</p>
-        )}
-      </div>
+      <select
+        className="rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm"
+        value={managerId ?? ''}
+        onChange={(e) => onSelect(Number(e.target.value))}
+      >
+        {managers.map((m) => (
+          <option key={m.id} value={m.id}>
+            {m.name} · {m.account_count} account{m.account_count === 1 ? '' : 's'}
+          </option>
+        ))}
+      </select>
       <button
         onClick={() => setAdding(true)}
         title="Add an account manager"
-        className="rounded-md border border-slate-300 px-2.5 py-1.5 text-sm text-slate-600 hover:bg-slate-50"
+        className="flex size-8 shrink-0 items-center justify-center rounded-md border border-slate-300 text-lg leading-none text-slate-500 hover:bg-slate-50 hover:text-slate-700"
       >
         +
       </button>
