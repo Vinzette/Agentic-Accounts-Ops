@@ -52,7 +52,15 @@ app = FastAPI(title="FieldAssist Pre-Call Briefing Agent", lifespan=lifespan)
 # Only needed when the frontend is hosted separately from the API. A
 # single-service deploy serves both from one origin and never triggers this.
 DEV_ORIGINS = ["http://localhost:5173", "http://127.0.0.1:5173"]
-ALLOWED_ORIGINS = [o.strip() for o in os.getenv("ALLOWED_ORIGINS", "").split(",") if o.strip()]
+
+# A browser's Origin header carries scheme and host only — never a path, not
+# even a bare slash. Trimming here means a URL copied out of a dashboard with a
+# trailing slash still matches, instead of silently blocking every request.
+ALLOWED_ORIGINS = [
+    origin.strip().rstrip("/")
+    for origin in os.getenv("ALLOWED_ORIGINS", "").split(",")
+    if origin.strip()
+]
 
 app.add_middleware(
     CORSMiddleware,
