@@ -12,6 +12,17 @@ import type {
   UploadResult,
 } from '../types'
 
+/**
+ * Where the API lives.
+ *
+ * Empty in development and for a single-service deploy, so requests stay
+ * relative and Vite's proxy handles them. Set to the backend's origin when the
+ * frontend is hosted separately.
+ */
+const API_BASE = (import.meta.env.VITE_API_BASE ?? '').replace(/\/$/, '')
+
+const url = (path: string) => `${API_BASE}${path}`
+
 async function message(res: Response): Promise<string> {
   try {
     const body = await res.json()
@@ -22,7 +33,7 @@ async function message(res: Response): Promise<string> {
 }
 
 async function get<T>(path: string): Promise<T> {
-  const res = await fetch(path)
+  const res = await fetch(url(path))
   if (!res.ok) throw new Error(await message(res))
   return res.json()
 }
@@ -32,7 +43,7 @@ export const getManagers = () => get<Manager[]>('/api/managers')
 export const getAccounts = (managerId: number) =>
   get<Account[]>(`/api/accounts?manager_id=${managerId}`)
 export async function createManager(name: string, region: string): Promise<Manager> {
-  const res = await fetch('/api/managers', {
+  const res = await fetch(url('/api/managers'), {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ name, region }),
@@ -51,14 +62,14 @@ export const getPipeline = () => get<Pipeline>('/api/pipeline')
 export async function uploadAccountFile(file: File): Promise<UploadResult> {
   const form = new FormData()
   form.append('file', file)
-  const res = await fetch('/api/extract/file', { method: 'POST', body: form })
+  const res = await fetch(url('/api/extract/file'), { method: 'POST', body: form })
   if (!res.ok) throw new Error(await message(res))
   return res.json()
 }
 
 /** Add the account to a manager's book, or update it if the name already exists. */
 export async function saveAccount(managerId: number, data: AccountData): Promise<Account> {
-  const res = await fetch('/api/accounts', {
+  const res = await fetch(url('/api/accounts'), {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ manager_id: managerId, data }),
@@ -69,7 +80,7 @@ export async function saveAccount(managerId: number, data: AccountData): Promise
 
 /** Messy notes to a structured draft, for the caller to review before briefing. */
 export async function extractAccount(notes: string): Promise<AccountData> {
-  const res = await fetch('/api/extract', {
+  const res = await fetch(url('/api/extract'), {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ notes }),
@@ -84,7 +95,7 @@ export async function extractAccount(notes: string): Promise<AccountData> {
  * EventSource only speaks GET, so this reads the stream off fetch directly.
  */
 async function stream<T>(path: string, body: unknown, onEvent: (event: T) => void): Promise<void> {
-  const res = await fetch(path, {
+  const res = await fetch(url(path), {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body),

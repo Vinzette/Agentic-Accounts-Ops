@@ -3,6 +3,7 @@
 import hashlib
 import json
 import logging
+import os
 import re
 from collections import defaultdict
 from collections.abc import AsyncIterator
@@ -48,9 +49,14 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(title="FieldAssist Pre-Call Briefing Agent", lifespan=lifespan)
 
+# Only needed when the frontend is hosted separately from the API. A
+# single-service deploy serves both from one origin and never triggers this.
+DEV_ORIGINS = ["http://localhost:5173", "http://127.0.0.1:5173"]
+ALLOWED_ORIGINS = [o.strip() for o in os.getenv("ALLOWED_ORIGINS", "").split(",") if o.strip()]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
+    allow_origins=ALLOWED_ORIGINS + DEV_ORIGINS,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -458,6 +464,12 @@ async def pipeline(request: Request) -> dict:
     }
 
 
-# Mounted last so /api/* always wins. Absent until the frontend is built.
+# Mounted last so /api/* always wins. Absent when the frontend is deployed
+# separately, in which case the root just says what this service is.
 if FRONTEND_DIST.exists():
     app.mount("/", StaticFiles(directory=FRONTEND_DIST, html=True), name="frontend")
+else:
+
+    @app.get("/")
+    def root() -> dict:
+        return {"service": "FieldAssist Pre-Call Briefing Agent API", "health": "/api/health"}
