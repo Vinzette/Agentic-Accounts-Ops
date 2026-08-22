@@ -105,6 +105,29 @@ def _readable(error: ValidationError) -> str:
     return "; ".join(f"{'.'.join(str(p) for p in e['loc'])}: {e['msg']}" for e in error.errors())
 
 
+# Matched on class name rather than importing the OpenAI SDK's exception tree,
+# which keeps this readable and survives the SDK reorganising itself.
+FRIENDLY_ERRORS = {
+    "AuthenticationError": "The server isn't configured with a valid API key.",
+    "PermissionDeniedError": "The server's API key isn't allowed to use this model.",
+    "RateLimitError": "The model is rate limited at the moment. Give it a few seconds.",
+    "APITimeoutError": "The model took too long to answer. Worth trying again.",
+    "APIConnectionError": "Couldn't reach the model service. It may be a passing outage.",
+    "InternalServerError": "The model service returned an error. Worth trying again.",
+    "BadRequestError": "The model rejected this request. The account data may be unusually large.",
+}
+
+
+def _friendly(exc: Exception) -> str:
+    """A sentence a non-technical reader can act on. Never a traceback."""
+    if isinstance(exc, ValueError):
+        return str(exc)  # our own validation messages, written to be read
+    return FRIENDLY_ERRORS.get(
+        type(exc).__name__,
+        "Something went wrong producing this. Nothing was saved — try again.",
+    )
+
+
 def _sse(payload: dict) -> str:
     return f"data: {json.dumps(payload, default=str)}\n\n"
 
@@ -160,7 +183,7 @@ async def _briefing_events(graph, payload: BriefingRequest) -> AsyncIterator[str
                 yield _sse({"type": "node", "node": node, "status": status, "detail": detail})
     except Exception as e:
         log.exception("Briefing run failed")
-        yield _sse({"type": "error", "message": str(e)})
+        yield _sse({"type": "error", "message": _friendly(e)})
         return
 
     briefing = state.get("briefing")
@@ -218,7 +241,7 @@ async def _portfolio_events(graph, manager: dict, accounts: list[dict]) -> Async
             state.update({k: v for k, v in result.items() if k != "briefings"})
     except Exception as e:
         log.exception("Portfolio run failed")
-        yield _sse({"type": "error", "message": str(e)})
+        yield _sse({"type": "error", "message": _friendly(e)})
         return
 
     brief = state.get("portfolio_brief")
@@ -282,7 +305,11 @@ def extract(payload: ExtractRequest, request: Request) -> dict:
     _check_quota(request)
     if not payload.notes.strip():
         raise HTTPException(400, "Paste some notes first.")
-    return extract_account(payload.notes).model_dump()
+    try:
+        return extract_account(payload.notes).model_dump()
+    except Exception as e:
+        log.exception("Extraction failed")
+        raise HTTPException(502, _friendly(e)) from e
 
 
 @app.post("/api/extract/file")
@@ -304,8 +331,14 @@ def extract_file(request: Request, file: UploadFile) -> dict:
             400, "No readable text in that file. A scanned PDF would need OCR first."
         )
 
+    try:
+        account = extract_account(extracted.text).model_dump()
+    except Exception as e:
+        log.exception("Extraction from file failed")
+        raise HTTPException(502, _friendly(e)) from e
+
     return {
-        "account": extract_account(extracted.text).model_dump(),
+        "account": account,
         "truncated": extracted.truncated,
         "total_chars": extracted.total_chars,
         "used_chars": len(extracted.text),

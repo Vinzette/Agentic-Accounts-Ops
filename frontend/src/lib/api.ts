@@ -27,6 +27,7 @@ async function get<T>(path: string): Promise<T> {
   return res.json()
 }
 
+export const getHealth = () => get<{ ok: boolean; model: string }>('/api/health')
 export const getManagers = () => get<Manager[]>('/api/managers')
 export const getAccounts = (managerId: number) =>
   get<Account[]>(`/api/accounts?manager_id=${managerId}`)

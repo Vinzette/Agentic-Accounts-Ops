@@ -6,8 +6,9 @@ import { ManagerPicker } from './components/ManagerPicker'
 import { PortfolioView } from './components/PortfolioView'
 import { HowItWorks } from './components/HowItWorks'
 import { RunLog } from './components/RunLog'
+import { WelcomeCard } from './components/WelcomeCard'
 import { BriefingSkeleton, PipelineStream } from './components/PipelineStream'
-import { getAccounts, getManagers, saveAccount, streamBriefing } from './lib/api'
+import { getAccounts, getHealth, getManagers, saveAccount, streamBriefing } from './lib/api'
 import type { Account, AccountData, Manager, NodeEvent, ResultEvent } from './types'
 
 const NEW_ACCOUNT = 'new'
@@ -38,6 +39,20 @@ export default function App() {
   const [form, setForm] = useState<AccountData>(EMPTY_ACCOUNT)
   const [mode, setMode] = useState<Mode>('form')
   const [tab, setTab] = useState<Tab>('briefing')
+  // Tabs he hasn't opened get a dot. Everything built after the briefing view
+  // is behind a click he has no reason to make unless something points at it.
+  const [seen, setSeen] = useState<Set<Tab>>(new Set(['briefing']))
+
+  const openTab = (next: Tab) => {
+    setTab(next)
+    setSeen((prev) => new Set(prev).add(next))
+  }
+
+  const dropAdoption = () =>
+    setForm((prev) => ({
+      ...prev,
+      adoption: 'Daily active field users ~25% of licensed seats, down from 88%',
+    }))
   const [notice, setNotice] = useState<string | null>(null)
   const [saving, setSaving] = useState(false)
 
@@ -45,6 +60,20 @@ export default function App() {
   const [result, setResult] = useState<ResultEvent | null>(null)
   const [running, setRunning] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [waking, setWaking] = useState(false)
+
+  // A hosted container that has been idle takes a while to answer its first
+  // request. Say so rather than showing a pane that looks broken.
+  useEffect(() => {
+    const slow = setTimeout(() => setWaking(true), 1500)
+    getHealth()
+      .catch(() => undefined)
+      .finally(() => {
+        clearTimeout(slow)
+        setWaking(false)
+      })
+    return () => clearTimeout(slow)
+  }, [])
 
   useEffect(() => {
     getManagers()
@@ -157,14 +186,15 @@ export default function App() {
           {TABS.map((t) => (
             <button
               key={t.id}
-              onClick={() => setTab(t.id)}
-              className={`-mb-px border-b-2 px-1 py-2.5 text-sm font-medium transition ${
+              onClick={() => openTab(t.id)}
+              className={`-mb-px flex items-center gap-1.5 border-b-2 px-1 py-2.5 text-sm font-medium transition ${
                 tab === t.id
                   ? 'border-slate-900 text-slate-900'
                   : 'border-transparent text-slate-500 hover:text-slate-800'
               }`}
             >
               {t.label}
+              {!seen.has(t.id) && <span className="size-1.5 rounded-full bg-sky-500" />}
             </button>
           ))}
         </div>
@@ -244,17 +274,33 @@ export default function App() {
 
           <section className="rounded-lg border border-slate-200 bg-white p-5 lg:p-6">
             {error && (
-              <div className="mb-4 rounded-md border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700">
-                {error}
+              <div className="mb-4 rounded-md border border-rose-200 bg-rose-50 px-3 py-3">
+                <p className="text-sm text-rose-700">{error}</p>
+                <button
+                  onClick={generate}
+                  disabled={running || !form.account_name.trim()}
+                  className="mt-2 rounded-md border border-rose-300 bg-white px-3 py-1.5 text-sm font-medium text-rose-700 hover:bg-rose-50 disabled:opacity-50"
+                >
+                  Try again
+                </button>
               </div>
             )}
 
-            {!running && !result && !error && (
-              <div className="py-16 text-center">
-                <p className="text-sm text-slate-500">
-                  Pick an account and generate a briefing to see it here.
-                </p>
-              </div>
+            {waking && !running && !result && !error && (
+              <p className="flex items-center gap-2 py-16 text-sm text-slate-500">
+                <span className="block size-3.5 animate-spin rounded-full border-2 border-slate-200 border-t-slate-700" />
+                Waking the server — it sleeps when idle, so the first request takes a moment.
+              </p>
+            )}
+
+            {!waking && !running && !result && !error && (
+              <WelcomeCard
+                canGenerate={Boolean(form.account_name.trim())}
+                onGenerate={generate}
+                onDropAdoption={dropAdoption}
+                onOpenPortfolio={() => openTab('portfolio')}
+                onOpenHowItWorks={() => openTab('how')}
+              />
             )}
 
             {steps.length > 0 && !result && (
@@ -264,7 +310,19 @@ export default function App() {
               </>
             )}
 
-            {result && <BriefingPanel result={result} />}
+            {result && (
+              <>
+                <BriefingPanel result={result} />
+                {!seen.has('portfolio') && (
+                  <button
+                    onClick={() => openTab('portfolio')}
+                    className="mt-6 w-full rounded-md border border-dashed border-slate-300 px-3 py-2.5 text-left text-sm text-slate-600 transition hover:border-slate-400 hover:bg-slate-50"
+                  >
+                    That's one account. See one brief across the whole book →
+                  </button>
+                )}
+              </>
+            )}
           </section>
         </div>
       </main>
