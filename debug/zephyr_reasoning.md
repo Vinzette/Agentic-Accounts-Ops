@@ -1,16 +1,13 @@
 # Reasoning trace: Zephyr Personal Care
 
-**Generated:** 2026-08-22 13:59 UTC
+**Generated:** 2026-08-22 16:06 UTC
 
 Internal only — not shown to the account manager. Kept for debugging a wrong classification or a weird output.
 
 ---
 
-This matches a Stalled pattern: the core product is live and liked in a narrow pilot, but the commercial decision has dragged well past plan (8 months vs a 3‑month scope) with no senior sponsor or rollout decision. Not Healthy: while sentiment and pilot usage are good, there is no expansion, no senior owner, and the pilot is about to time out without a path to production. Not At‑Risk in the classic sense either, because there are no technical issues, complaints, or competitive noise; the main problem is indecision and lack of executive engagement rather than active negative movement. 
+This account matches the Stalled pattern: they bought and ran a pilot with good usage but haven't progressed to a decision, and the pilot has drifted far past its intended end without senior engagement. The clearest signal is timing and indecision: an 8‑month pilot originally scoped for 3 months, with positive field feedback but still no decision on a national rollout and no ROI case built with the stakeholders who control budget. That is exactly a stuck evaluation rather than an active decline (At-Risk) or a scaling success (Healthy). It's not Healthy because there is no senior sponsor or budget-holder relationship, no expansion beyond 1 region and ~120 of ~2,000 stores, and the near-term milestone is a go/no‑go decision on the pilot rather than a committed rollout. It's not yet At-Risk because sentiment and usage inside the pilot are strong (NPS 8 within the pilot team, "strong engagement" and no technical issues), and there is no explicit competitive threat or negative escalation; the danger is inertia, not dissatisfaction. 
 
-Distinct levers:
-1) Build the missing senior/budget-holder relationship to unblock a decision beyond the enthusiastic but junior innovation lead.
-2) Co-create a clear ROI and business case using pilot results to support a national rollout decision ahead of the 6‑week review.
-3) Reframe and timebox the pilot/decision process so it doesn’t just lapse at review — structure the decision path (rollout vs extended pilot vs close‑out).
+Levers available: (1) Build the ROI/business case with the Innovation/Digital lead so there is a concrete, quantified story to take to decision-makers; (2) Establish and activate a senior/budget-holder relationship ahead of the pilot review, since there is currently "no senior/budget-holder relationship"; these are distinct because one is about the content (the case) and the other about the audience (who hears it). A third potential lever (product expansion) is premature until the first two move. 
 
-One thing to watch that isn’t fully captured by those levers: the huge deployment headroom (120 live vs ~2,000 potential stores) is both the main upside and also a credibility test — if they can’t translate strong pilot feedback into even a phased expansion, it’s a signal that internal change appetite may be weaker than the innovation lead suggests.
+One thing worth watching that sits outside those levers: the sheer deployment headroom between 120 pilot stores and the ~2,000‑store estate. That gap is both the upside if you land this and the implied scale of the loss if the pilot lapses, and should shape how much senior attention and preparation time the account manager allocates over the next 6 weeks.

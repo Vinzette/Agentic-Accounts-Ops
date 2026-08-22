@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { getRun, getRuns } from '../lib/api'
 import type { RunDetail, RunSummary } from '../types'
+import { StatusBadge } from './StatusBadge'
 
 const SOURCE_LABELS: Record<string, string> = {
   file: 'CLI',
@@ -13,6 +14,33 @@ const SOURCE_LABELS: Record<string, string> = {
 function when(iso: string): string {
   const date = new Date(iso.endsWith('Z') ? iso : `${iso}Z`)
   return Number.isNaN(date.getTime()) ? iso : date.toLocaleString()
+}
+
+function Field({
+  title,
+  items,
+  ordered = false,
+}: {
+  title: string
+  items: string[]
+  ordered?: boolean
+}) {
+  if (!items?.length) return null
+  return (
+    <div>
+      <p className="mb-1 text-xs font-semibold tracking-wider text-slate-500 uppercase">{title}</p>
+      <ul className="space-y-1">
+        {items.map((item, i) => (
+          <li key={i} className="flex gap-2 text-sm text-slate-700">
+            <span className="shrink-0 text-slate-400 tabular-nums">
+              {ordered ? `${i + 1}.` : '\u2022'}
+            </span>
+            {item}
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
 }
 
 function Detail({ run }: { run: RunDetail }) {
@@ -45,19 +73,25 @@ function Detail({ run }: { run: RunDetail }) {
       )}
 
       {briefing && (
-        <div>
-          <p className="mb-1 text-xs font-semibold tracking-wider text-slate-500 uppercase">
-            What it said
-          </p>
-          <p className="mb-2 text-sm text-slate-700">{briefing.snapshot}</p>
-          <ul className="space-y-1">
-            {briefing.why.map((w, i) => (
-              <li key={i} className="flex gap-2 text-sm text-slate-700">
-                <span className="text-slate-300">•</span>
-                {w}
-              </li>
-            ))}
-          </ul>
+        <div className="space-y-3">
+          <div className="flex flex-wrap items-center gap-2">
+            <StatusBadge status={briefing.status} />
+            <span className="text-sm text-slate-700">{briefing.snapshot}</span>
+          </div>
+
+          <Field title="Why" items={briefing.why} />
+          <Field title="Who to talk to" items={briefing.who_to_talk_to} />
+          <Field title="Next actions" items={briefing.next_actions} ordered />
+          <Field title="One thing to watch" items={[briefing.one_thing_to_watch]} />
+
+          <details>
+            <summary className="cursor-pointer text-xs font-medium text-slate-600 hover:text-slate-900">
+              Reasoning
+            </summary>
+            <p className="mt-2 text-xs leading-relaxed whitespace-pre-wrap text-slate-600">
+              {briefing.reasoning}
+            </p>
+          </details>
         </div>
       )}
 

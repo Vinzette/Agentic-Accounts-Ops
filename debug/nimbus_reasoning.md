@@ -1,13 +1,16 @@
 # Reasoning trace: Nimbus Confectionery
 
-**Generated:** 2026-08-22 13:59 UTC
+**Generated:** 2026-08-22 16:06 UTC
 
 Internal only — not shown to the account manager. Kept for debugging a wrong classification or a weird output.
 
 ---
 
-This clearly matches the Healthy pattern: ARR is up strongly year-on-year ($1.6M to $2.1M), daily active usage is very high (88% of licensed seats), most stores are live, the VP Sales is an engaged executive sponsor, the QBR was successful, they attended the user conference, NPS is 9, and they're already asking about expanding Image Recognition. None of the At-Risk indicators show: usage isn't dropping, no champion has left (Ops lead was promoted but remains the champion), there are no serious unresolved issues, no competitor mentions, and renewal is still 5 months away with strong satisfaction. It is not Stalled either — core, Analytics, and partial IR are live and heavily used, and they're proactively exploring further rollout rather than dragging their feet. 
+This clearly matches the Healthy pattern: ARR is up substantially year-on-year, adoption is very strong, multiple products are live and used, and the senior sponsor is both identified and engaged. ($2.1M up from $1.6M; 88% DAU of licensed seats; heavily used Analytics; engaged VP Sales sponsor.) They are proactively exploring expansion (Image Recognition to 3 more markets), attended our user conference, and gave a very high NPS (9). None of the At-Risk markers appear: no usage decline, no escalation, no competitive noise, and renewal is not imminent. It’s also not Stalled: core is broadly deployed (95% of stores live), IR is live in 2 markets, and Analytics is heavily used — this is an active, growing deployment rather than a stuck pilot. 
 
-Distinct levers: (1) Expansion of Image Recognition from 2 of 5 markets to the remaining 3, which they themselves have raised — that's the primary growth lever. (2) Relationship-building with the new Regional Head in SE Asia, who is currently unmet but likely critical for regional buy-in and for any expansion in that geography. (3) Renewal/value case preparation using their strong adoption, NPS, and success story from the QBR and conference participation, to lock in an early, possibly multi-year renewal given their growth and advocacy. These are three genuinely different kinds of work: product expansion, relationship mapping, and commercial/renewal positioning.
+Distinct levers:
+1) Expansion of Image Recognition into remaining 3 markets — they explicitly asked about this, and there is clear deployment headroom (IR in 2 of 5 markets today).
+2) Strengthen and broaden stakeholder coverage, especially with the new Regional Head in SE Asia, who is not yet met, and keep tight with the promoted National Field Ops lead.
+3) Renewal value story and reference positioning — with 5 months to go, strong usage, growth in ARR, and a 9 NPS, this is the right time to package outcomes for a smooth renewal and potential upsell.
 
-One thing to watch that none of these levers directly covers: deployment headroom on core/Analytics by market and store — 95% of stores are live overall, but we don't know how that splits across the 5 markets or how Analytics penetration aligns with IR rollouts. Any unevenness there could either constrain or accelerate IR expansion, so keeping an eye on cross-market consistency and readiness is important.
+One thing to watch that isn’t fully covered by those levers: as the National Field Ops lead has just been promoted, their remit and bandwidth might shift; if their role drifts away from day-to-day champion work without a clear operational counterpart stepping in, the very strong adoption could become more fragile over time.

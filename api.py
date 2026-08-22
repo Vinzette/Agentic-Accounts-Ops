@@ -31,7 +31,7 @@ FRONTEND_DIST = Path(__file__).parent / "frontend" / "dist"
 
 # ponytail: per-process, per-IP counter. Enough to stop one visitor draining the
 # API key; swap for a shared store if this ever runs on more than one worker.
-MAX_RUNS_PER_IP = 40
+MAX_RUNS_PER_IP = 60
 # Decks carry images we never read; the text inside is what costs anything.
 MAX_UPLOAD_BYTES = 20 * 1024 * 1024
 _runs_by_ip: dict[str, int] = defaultdict(int)
@@ -86,8 +86,21 @@ def _slugify(name: str) -> str:
     return re.sub(r"[^a-z0-9]+", "_", name.lower()).strip("_") or "account"
 
 
+def _client_ip(request: Request) -> str:
+    """The visitor's address, not the proxy's.
+
+    Hosted behind a reverse proxy, `request.client.host` is the proxy for every
+    visitor — which would put everyone in one shared quota bucket and 429 the
+    whole app once any single person hit the cap.
+    """
+    forwarded = request.headers.get("x-forwarded-for")
+    if forwarded:
+        return forwarded.split(",")[0].strip()
+    return request.client.host if request.client else "unknown"
+
+
 def _check_quota(request: Request) -> None:
-    ip = request.client.host if request.client else "unknown"
+    ip = _client_ip(request)
     if _runs_by_ip[ip] >= MAX_RUNS_PER_IP:
         raise HTTPException(429, "Run limit reached for this session.")
     _runs_by_ip[ip] += 1
