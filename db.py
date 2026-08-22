@@ -96,11 +96,24 @@ def content_hash(value: Any) -> str:
     return hashlib.sha256(blob).hexdigest()[:12]
 
 
+def _normalise(url: str) -> str:
+    """Point Postgres URLs at psycopg 3.
+
+    Every hosted provider hands out `postgresql://`, which SQLAlchemy reads as a
+    request for psycopg2. Rewriting here means a connection string can be pasted
+    verbatim into a deployment dashboard with no edit to remember.
+    """
+    for prefix in ("postgresql://", "postgres://"):
+        if url.startswith(prefix):
+            return "postgresql+psycopg://" + url[len(prefix) :]
+    return url
+
+
 def engine() -> Engine:
     """The process-wide engine, built on first use."""
     global _engine
     if _engine is None:
-        url = os.getenv("DATABASE_URL", DEFAULT_URL)
+        url = _normalise(os.getenv("DATABASE_URL", DEFAULT_URL))
         options: dict[str, Any] = {"pool_pre_ping": True}
         if url.startswith("sqlite"):
             # FastAPI serves from a thread pool, which SQLite rejects by default.
@@ -262,6 +275,12 @@ def _self_check() -> None:
     with tempfile.TemporaryDirectory() as tmp:
         _engine = None
         os.environ["DATABASE_URL"] = f"sqlite:///{Path(tmp) / 'check.db'}"
+
+        # A pasted provider URL must reach psycopg 3 without hand-editing.
+        assert _normalise("postgresql://u:p@h/db") == "postgresql+psycopg://u:p@h/db"
+        assert _normalise("postgres://u:p@h/db") == "postgresql+psycopg://u:p@h/db"
+        assert _normalise("postgresql+psycopg://u:p@h/db") == "postgresql+psycopg://u:p@h/db"
+        assert _normalise("sqlite:///x.db") == "sqlite:///x.db"
 
         init_db()
         init_db()  # idempotent: must not double-seed
