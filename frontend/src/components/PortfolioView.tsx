@@ -192,7 +192,7 @@ export function PortfolioView({ manager }: { manager: Manager | undefined }) {
                   >
                     <div className="space-y-4">
                       <div className="flex flex-wrap items-center gap-2">
-                        <StatusBadge status={b.status} />
+                        <StatusBadge status={b.status} provisional={b.provisional} />
                         <span className="text-sm text-slate-600">{b.snapshot}</span>
                       </div>
                       <Section title="Why">

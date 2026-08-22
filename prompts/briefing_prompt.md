@@ -14,6 +14,8 @@ Classify the account into exactly one status, using this rubric:
 
 Weigh the signals in the data against these three patterns and pick whichever the account matches best. Don't split the difference — pick one.
 
+These lists are not scorecards. **Any single marker can carry a verdict on its own** — an account does not need three of the five At-Risk signals to be At-Risk. Counting how many markers are absent is the wrong move; ask instead whether the ones that *are* present are serious enough to define the account.
+
 ### When the signals conflict
 
 Real accounts rarely match one pattern cleanly. When they point in different directions, weigh them by how far ahead each one sees:
@@ -23,7 +25,13 @@ Real accounts rarely match one pattern cleanly. When they point in different dir
 
 A leading signal that is deteriorating outranks a lagging signal that still looks good. Usage falling while revenue is up is not a mixed picture — it is an account that hasn't renegotiated yet. Classify on where it is heading, not where it has been.
 
+Apply this **before** you check the rubric lists, not afterwards as a tiebreaker. A materially falling usage trend is enough for At-Risk by itself, even where the renewal is distant, sentiment is high, nobody has complained and no competitor has been named. Those are all lagging, and a distant renewal is not reassurance — it is time in which the decline continues unnoticed.
+
 Name the tension explicitly in `reasoning`. If the positive signals are genuinely strong, let them shape `next_actions` — but they do not rescue the status.
+
+### When the record is nearly empty
+
+Sometimes most fields come through as `not recorded`. Say so plainly rather than dressing the absence up as a finding. Pick the status that misleads least, state in `reasoning` that it rests on absent evidence rather than positive proof, and let `next_actions` be the discovery work that would let someone actually judge the account — pull the contract, get usage numbers, find out who the sponsor is. Do not manufacture health signals out of silence, and do not imply the account is fine simply because nothing bad is on file.
 
 ## Signals that are easy to miss
 
@@ -45,7 +53,10 @@ Fill `reasoning` first, before any other field. Work through three things there,
 Then let the remaining fields follow from that plan rather than deciding first and justifying afterward. `reasoning` is internal only; the account manager never sees it. Beyond that, produce exactly these six fields, nothing more:
 
 1. **status** — one of Healthy / At-Risk / Stalled.
-2. **snapshot** — account name, tier, and ARR in one short line, e.g. "Alder Snacks · Growth · $920K ARR".
+2. **snapshot** — account name, tier, and ARR in one short line, e.g. "Alder Snacks · Growth · $920K ARR". This is the first thing anyone reads, so it has to scan in a second.
+   Where the ARR on record is a spoken or vague phrase rather than a clean figure, take the current value out of it and drop the narration. Never paste the sentence it came from, and never open on a fragment like "have gone from".
+   - record says `"Gone from about eight hundred thousand to just over a million this year"` → `"Thornbury Mills · Growth · ~just over a million ARR"`
+   - record says `"not recorded"` → `"Thornbury Mills · Growth · ARR not recorded"`
 3. **why** — 2-3 signals from the data that led to that status. Every signal must end with a parenthetical citation, and what sits inside those brackets is **the data itself**, quoted or closely paraphrased. The bracket answers "where does this come from", never "what does it mean" — a reader has to be able to check the claim against the source file. Restate the figure in the brackets even when it already appears earlier in the sentence.
    One bracket, one data point. If you are listing three figures in a single citation separated by semicolons, you have merged three signals into one — keep the strongest and let the others go. This gets read in thirty seconds before a call.
    - "ARR grew 31% year-over-year (from $700K to $920K)"
@@ -130,7 +141,8 @@ Check your own output against three questions, and fix anything that fails:
 1. Would any two of your `next_actions` be finished by the same meeting or the same piece of work? If so they are one lever — merge them and either find a genuinely different third or return just two.
 2. Does `one_thing_to_watch` say something the rest of the briefing hasn't? If it echoes an action or a signal, go back to the data and find what nobody has mentioned.
 3. Does every bracket in `why` hold data from the account file rather than your conclusion about that data?
-4. Does every signal in `why` actually support the status you chose? If one of them argues against it, you picked the wrong status — a signal you had to explain away belongs to a different verdict.
+4. If usage or adoption is materially falling and you chose Healthy, you have weighted the lagging signals too heavily. Go back to the status.
+5. Does every signal in `why` actually support the status you chose? If one of them argues against it, you picked the wrong status — a signal you had to explain away belongs to a different verdict.
 
 ## Tone rules
 

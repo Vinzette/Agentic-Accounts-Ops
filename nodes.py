@@ -57,6 +57,8 @@ def load_data(state: dict) -> dict:
         # The model-facing form, so citations are checked against what it saw.
         "account_data": account.for_prompt(),
         "missing_fields": account.missing_fields(),
+        "evidence_gaps": account.evidence_gaps(),
+        "provisional": account.is_provisional(),
         "generated_at": datetime.now(UTC).strftime("%Y-%m-%d %H:%M UTC"),
     }
 

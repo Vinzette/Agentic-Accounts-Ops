@@ -67,6 +67,8 @@ export interface ResultEvent {
   markdown: string
   generated_at: string | null
   missing_fields: string[]
+  evidence_gaps: string[]
+  provisional: boolean
   attempts: number
   max_attempts: number
   validation: Validation
@@ -146,6 +148,7 @@ export interface PortfolioResultEvent {
     account_name: string
     status: Status
     snapshot: string
+    provisional: boolean
     reasoning: string
     why: string[]
     who_to_talk_to: string[]

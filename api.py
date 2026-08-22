@@ -199,6 +199,8 @@ async def _briefing_events(graph, payload: BriefingRequest) -> AsyncIterator[str
             "markdown": state.get("markdown", ""),
             "generated_at": state.get("generated_at"),
             "missing_fields": state.get("missing_fields") or [],
+            "evidence_gaps": state.get("evidence_gaps") or [],
+            "provisional": state.get("provisional", False),
             "attempts": state.get("attempts", 1),
             "max_attempts": MAX_ATTEMPTS,
             "validation": {

@@ -63,6 +63,7 @@ def brief_one(state: dict) -> dict:
             {
                 "account_name": result["account_data"]["account_name"],
                 "status": briefing.status.value,
+                "provisional": result.get("provisional", False),
                 "reasoning": briefing.reasoning,
                 "snapshot": briefing.snapshot,
                 "why": briefing.why,

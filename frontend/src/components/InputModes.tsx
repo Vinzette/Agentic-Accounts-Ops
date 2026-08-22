@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { extractAccount, uploadAccountFile } from '../lib/api'
+import { SAMPLE_NOTES } from '../lib/sampleNotes'
 import type { AccountData } from '../types'
 
 export type Mode = 'form' | 'paste' | 'upload'
@@ -51,6 +52,22 @@ export function PastePanel({ onExtracted }: { onExtracted: (data: AccountData) =
         Paste CRM notes, an email thread, meeting notes — whatever you have. The fields get
         filled in for you to check before anything is generated.
       </p>
+
+      <div className="rounded-md border border-slate-200 bg-slate-50 p-2.5">
+        <p className="mb-2 text-xs font-medium text-slate-600">Or start from a sample</p>
+        <div className="space-y-1.5">
+          {SAMPLE_NOTES.map((sample) => (
+            <button
+              key={sample.label}
+              onClick={() => setNotes(sample.text)}
+              className="block w-full rounded border border-slate-200 bg-white px-2.5 py-1.5 text-left transition hover:border-slate-300"
+            >
+              <span className="text-xs font-medium text-slate-700">{sample.label}</span>
+              <span className="block text-[11px] text-slate-500">{sample.note}</span>
+            </button>
+          ))}
+        </div>
+      </div>
       <textarea
         rows={12}
         value={notes}

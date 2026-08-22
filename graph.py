@@ -32,6 +32,8 @@ class GraphState(TypedDict, total=False):
 
     # Set by load_data.
     missing_fields: list[str]
+    evidence_gaps: list[str]
+    provisional: bool
     generated_at: str
 
     # Set by generate_briefing, and overwritten on each retry.

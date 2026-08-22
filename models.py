@@ -6,6 +6,12 @@ from pydantic import BaseModel, Field
 
 NOT_RECORDED = "not recorded"
 
+# The fields the rubric actually reasons from. Industry and tier colour a
+# briefing in; these decide it. With most of them blank, any status is a guess
+# dressed as a finding.
+DECISIVE_FIELDS = ("arr", "adoption", "key_people", "last_90_days", "renewal", "nps")
+MAX_MISSING_BEFORE_PROVISIONAL = 4
+
 
 class AccountStatus(StrEnum):
     HEALTHY = "Healthy"
@@ -31,6 +37,14 @@ class AccountData(BaseModel):
     def missing_fields(self) -> list[str]:
         """Fields with nothing in them, for the completeness note on the briefing."""
         return [name for name in AccountData.model_fields if not getattr(self, name)]
+
+    def evidence_gaps(self) -> list[str]:
+        """Decisive fields with nothing in them."""
+        return [name for name in DECISIVE_FIELDS if not getattr(self, name)]
+
+    def is_provisional(self) -> bool:
+        """True when too little is on record for a status to mean anything."""
+        return len(self.evidence_gaps()) >= MAX_MISSING_BEFORE_PROVISIONAL
 
     def for_prompt(self) -> dict[str, str | list[str]]:
         """Serialise for the LLM, marking absent fields so absence isn't read as zero."""
