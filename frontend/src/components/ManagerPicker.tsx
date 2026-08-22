@@ -45,11 +45,11 @@ export function ManagerPicker({
 
   if (adding) {
     return (
-      <div className="flex flex-wrap items-start gap-2">
-        <div>
+      <div className="flex w-full max-w-md flex-wrap items-start gap-2">
+        <div className="min-w-0 flex-1">
           <input
             autoFocus
-            className={FIELD}
+            className={`${FIELD} w-full`}
             placeholder="Name"
             value={name}
             onChange={(e) => setName(e.target.value)}
@@ -58,7 +58,7 @@ export function ManagerPicker({
           {error && <p className="mt-1 max-w-56 text-xs text-rose-600">{error}</p>}
         </div>
         <input
-          className={FIELD}
+          className={`${FIELD} min-w-0 flex-1`}
           placeholder="Region (optional)"
           value={region}
           onChange={(e) => setRegion(e.target.value)}

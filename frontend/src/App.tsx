@@ -158,7 +158,7 @@ export default function App() {
   return (
     <div className="min-h-screen">
       <header className="border-b border-slate-200 bg-white">
-        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-4 py-3 lg:px-6">
+        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-x-3 gap-y-2 px-4 py-3 lg:px-6">
           <div className="flex items-center gap-2.5">
             <span className="flex size-7 items-center justify-center rounded bg-slate-900 text-xs font-bold text-white">
               FA
@@ -182,12 +182,12 @@ export default function App() {
       </header>
 
       <nav className="border-b border-slate-200 bg-white">
-        <div className="mx-auto flex max-w-7xl gap-6 px-4 lg:px-6">
+        <div className="mx-auto flex max-w-7xl gap-5 overflow-x-auto px-4 sm:gap-6 lg:px-6">
           {TABS.map((t) => (
             <button
               key={t.id}
               onClick={() => openTab(t.id)}
-              className={`-mb-px flex items-center gap-1.5 border-b-2 px-1 py-2.5 text-sm font-medium transition ${
+              className={`-mb-px flex shrink-0 items-center gap-1.5 border-b-2 px-1 py-2.5 text-sm font-medium whitespace-nowrap transition ${
                 tab === t.id
                   ? 'border-slate-900 text-slate-900'
                   : 'border-transparent text-slate-500 hover:text-slate-800'
