@@ -88,7 +88,7 @@ def synthesize(state: PortfolioState) -> dict:
             {
                 k: v
                 for k, v in b.items()
-                if k not in {"attempts", "validation_passed", "run_id", "reasoning"}
+                if k not in {"attempts", "run_id", "reasoning"}
             }
             for b in briefings
         ],
