@@ -8,3 +8,9 @@ frontend/dist/
 *.db
 .prep/
 DEEP_DIVE.md
+CHECKLIST.md
+notion.md
+features.md
+FieldAssist_Agentic_Ops_Assignment.*
+outputs/
+debug/

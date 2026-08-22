@@ -17,6 +17,28 @@ FIGURE = re.compile(r"\d[\d,]*(?:\.\d+)?(?:\s*%|\s*[mkbMKB](?![a-zA-Z]))?")
 # Crude by design, which is why hits are warnings rather than grounds to retry.
 NEGATIVE_MARKERS = ("declin", "dropp", "left", "overrun", "unengaged", "churn", "stalled")
 
+# Words carrying no evidence either way, so their presence proves nothing.
+STOPWORDS = set(
+    "about above across after against already also although always "
+    "among another because been before being below between both "
+    "could does doing down during each either even ever "
+    "every from further have having here however into just "
+    "less like made make many more most much must "
+    "near need neither next none only other over past "
+    "quite rather same should since some still such than "
+    "that their them then there these they this those "
+    "through under until very were what when where which "
+    "while with within would your".split()
+)
+
+# How much of a citation's wording has to appear in the record. Set low on
+# purpose: the prompt permits "closely paraphrased", so the target is a citation
+# with nothing behind it, not one worded differently.
+GROUNDED_WORD_RATIO = 0.34
+
+# Below this there isn't enough in the bracket to judge fairly.
+MIN_WORDS_TO_JUDGE = 3
+
 
 # What each check does and whether failing it costs a regeneration. Kept here so
 # anything describing the checks describes the ones that actually run.
@@ -34,6 +56,14 @@ CHECKS = [
     {
         "name": "Missing citation",
         "detail": "Every signal has to carry a parenthetical citation.",
+        "on_failure": "regenerates",
+    },
+    {
+        "name": "Citation wording",
+        "detail": (
+            "A citation built from words the record never uses is invented, even when "
+            "it holds no figures to check."
+        ),
         "on_failure": "regenerates",
     },
     {
@@ -77,6 +107,26 @@ def ungrounded_figures(text: str, haystack: str) -> list[str]:
     return [figure for figure in FIGURE.findall(text) if normalise(figure) not in haystack]
 
 
+def content_words(text: str) -> list[str]:
+    """The words in `text` that carry evidence."""
+    return [w for w in re.findall(r"[a-z]{4,}", text.lower()) if w not in STOPWORDS]
+
+
+def is_ungrounded_text(cited: str, haystack: str) -> bool:
+    """True when a citation's wording has essentially no basis in the source.
+
+    Figures are checked separately and exactly. This catches the other half — a
+    bracket of plausible prose about people or events the record never mentions,
+    which the figure check passes over because it holds no digits.
+    """
+    words = content_words(cited)
+    if len(words) < MIN_WORDS_TO_JUDGE:
+        return False
+
+    found = sum(1 for word in words if word in haystack)
+    return found / len(words) < GROUNDED_WORD_RATIO
+
+
 def _check_citations(briefing: Briefing, haystack: str) -> list[str]:
     """Every figure cited inside brackets must exist in the source data.
 
@@ -94,6 +144,11 @@ def _check_citations(briefing: Briefing, haystack: str) -> list[str]:
                 errors.append(
                     f'Signal cites "{figure.strip()}", which does not appear anywhere '
                     f'in the account data: "{signal}"'
+                )
+            if is_ungrounded_text(cited, haystack):
+                errors.append(
+                    f'Signal cites "{cited.strip()}", which the account data does not '
+                    f'support: "{signal}"'
                 )
     return errors
 
@@ -192,6 +247,34 @@ def _self_check() -> None:
         {"account_name": "Thin Co", "last_90_days": [], "adoption": "~88% of seats"},
     )
     assert errors == [], errors
+
+    # A citation with no figures at all is still checked, by its wording.
+    errors, _ = check_briefing(
+        brief(
+            why=[
+                "Leadership is behind us (the CFO confirmed sponsorship during the board review)",
+                "Adoption is strong (~88% of licensed seats)",
+            ]
+        ),
+        nimbus,
+    )
+    assert len(errors) == 1 and "does not support" in errors[0], errors
+
+    # Paraphrase must survive — the prompt allows it, so tripping on it would thrash.
+    errors, _ = check_briefing(
+        brief(
+            why=[
+                "Image Recognition is only partly deployed (rolled out in 2 of 5 markets)",
+                "Usage is high (daily active field users ~88% of licensed seats)",
+            ]
+        ),
+        nimbus,
+    )
+    assert errors == [], errors
+
+    # Too few words to judge fairly.
+    assert not is_ungrounded_text("(NPS 9)", normalise(flatten(nimbus)))
+    assert not is_ungrounded_text("(pilot lapsed)", normalise(flatten(nimbus)))
 
     # Sparse accounts skip the ARR check rather than failing it.
     errors, _ = check_briefing(brief(), {"account_name": "Thin Co", "arr": NOT_RECORDED})

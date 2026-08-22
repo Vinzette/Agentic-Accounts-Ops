@@ -49,9 +49,9 @@ Then let the remaining fields follow from that plan rather than deciding first a
 3. **why** — 2-3 signals from the data that led to that status. Every signal must end with a parenthetical citation, and what sits inside those brackets is **the data itself**, quoted or closely paraphrased. The bracket answers "where does this come from", never "what does it mean" — a reader has to be able to check the claim against the source file. Restate the figure in the brackets even when it already appears earlier in the sentence.
    One bracket, one data point. If you are listing three figures in a single citation separated by semicolons, you have merged three signals into one — keep the strongest and let the others go. This gets read in thirty seconds before a call.
    - "ARR grew 31% year-over-year (from $700K to $920K)"
-   - "Adoption is strong (82% of licensed seats are daily active users)"
-   - "Adoption is collapsing (daily active field users fell from 60% to 35% over two quarters)"
-   - "A paid module has never been switched on (Route planning purchased 9 months ago, never configured)"
+   - "Adoption is strong (82% of licensed seats log in daily)"
+   - "Usage is sliding (reps opening the app on a given day went from 60% of seats to 35%)"
+   - "A paid module has never been switched on (Route planning licensed 9 months ago, never switched on)"
 4. **who_to_talk_to** — the key person or people for the next conversation, with their role and a short reason they matter.
 5. **next_actions** — 2-3 specific, concrete things the account manager should do this week, one per lever you identified. Two sharp actions beat three where two pull the same lever. End each action at the action itself; the briefing already establishes why it matters, so don't append a clause explaining what it will achieve.
    - "Book a call with the unmet Ops Director before the 2-month renewal"
@@ -61,7 +61,7 @@ Then let the remaining fields follow from that plan rather than deciding first a
 
 ## Worked example
 
-This account is not one of the real accounts you'll be asked about — it's here to show the pattern: plan the levers in `reasoning`, then let the fields follow. Note how the reasoning picks out the paid-for-but-unconfigured module and the gap between live and target outlets. Neither is a headline number, and both turn out to be the most useful material in the account.
+This account is not one of the real accounts you'll be asked about — it's here to show the pattern: plan the levers in `reasoning`, then let the fields follow. Note how the reasoning picks out the paid-for-but-unswitched-on module and the gap between live and target outlets. Neither is a headline number, and both turn out to be the most useful material in the account.
 
 **Example account data:**
 ```json
@@ -69,11 +69,11 @@ This account is not one of the real accounts you'll be asked about — it's here
   "account_name": "Solace Nutrition",
   "industry": "Nutrition",
   "tier": "Growth",
-  "arr": "$850K (down from $900K a year ago)",
-  "products_in_use": ["Retail-execution core (live, usage declining)", "Route planning module (purchased 9 months ago, never configured)"],
-  "adoption": "Daily active field users dropped from 60% to 35% over two quarters; live in 340 of ~1,100 target outlets",
-  "key_people": ["Former champion (Head of Ops) moved to a different team, no longer involved", "New contact has not responded to outreach"],
-  "last_90_days": ["Two support tickets escalated to a support lead", "A stakeholder mentioned evaluating a competitor", "No QBR held this quarter"],
+  "arr": "$850K, against $900K the year before",
+  "products_in_use": ["Retail-execution core (deployed, though logins are thinning)", "Route planning module (licensed 9 months ago, never switched on)"],
+  "adoption": "Reps opening the app on a given day have gone from 60% of seats to 35% across two quarters; live in 340 of ~1,100 target outlets",
+  "key_people": ["The Head of Ops who sponsored the rollout moved internally and has stepped away", "Their replacement has not answered three attempts at contact"],
+  "last_90_days": ["A sync failure was raised twice and is still unresolved", "Their commercial lead asked us to justify the licence cost against a rival quote", "The quarterly review slipped and was never rebooked"],
   "open_issues": "2 tickets open, unresolved",
   "renewal": "in 2 months",
   "nps": "5 — declining"
@@ -83,24 +83,24 @@ This account is not one of the real accounts you'll be asked about — it's here
 **Example output:**
 ```json
 {
-  "reasoning": "At-Risk signals stack up: adoption is actively dropping (60% to 35%), the champion who drove the relationship is gone and unreplaced, support issues have escalated, a competitor has entered the conversation, and renewal is 2 months out. Not Healthy — spend is down, not up. Not Stalled either — this was a live, adopted deployment now regressing, rather than a rollout that never started. Levers available, and they are genuinely different kinds of work: (1) rebuild the relationship, since there is no engaged contact at all right now; (2) switch on the Route planning module, paid for and untouched for 9 months; (3) clear the 2 open tickets, which are the concrete grievance feeding the competitor conversation. Worth watching, and covered by none of those: only 340 of ~1,100 target outlets are live, so the unrealised footprint is the strongest argument against the competitor and nobody has made it yet.",
+  "reasoning": "At-Risk signals stack up: usage is sliding (60% of seats to 35%), the sponsor who drove the rollout has gone with nobody answering in her place, a fault has been raised twice without resolution, a rival quote is already circulating, and renewal is 2 months out. Not Healthy — spend is down, not up. Not Stalled either — this was a live, adopted deployment now regressing, rather than a rollout that never started. Levers available, and they are genuinely different kinds of work: (1) rebuild the relationship, since nobody on their side is currently engaged; (2) switch on the Route planning module, paid for and untouched for 9 months; (3) clear the 2 open tickets, which are the concrete grievance behind the rival quote. Worth watching, and covered by none of those: only 340 of ~1,100 target outlets are live, so the unrealised footprint is the strongest argument against the competitor and nobody has made it yet.",
   "status": "At-Risk",
   "snapshot": "Solace Nutrition · Growth · $850K ARR",
   "why": [
     "ARR declined year-over-year (from $900K to $850K)",
-    "Adoption is dropping fast (daily active field users fell from 60% to 35% over two quarters)",
-    "A paid module has never been switched on (Route planning purchased 9 months ago, never configured)"
+    "Usage is sliding (reps opening the app on a given day went from 60% of seats to 35%)",
+    "A paid module has never been switched on (Route planning licensed 9 months ago, never switched on)"
   ],
   "who_to_talk_to": [
-    "New contact in the former champion's team — unresponsive so far, but the only path back in without a named replacement champion",
-    "The stakeholder who raised the competitor demo — the objection is live and unanswered"
+    "Whoever inherited the Head of Ops remit — unresponsive across three attempts, but the only route back in",
+    "Their commercial lead — holding a rival quote, and the objection is live and unanswered"
   ],
   "next_actions": [
-    "Escalate outreach to the new contact by phone before the 2-month renewal",
+    "Reach the Head of Ops successor by phone before the 2-month renewal",
     "Get the Route planning module configured — paid for and untouched for 9 months",
     "Close the 2 open support tickets ahead of the renewal conversation"
   ],
-  "one_thing_to_watch": "Only 340 of ~1,100 target outlets are live — that unrealised footprint is the strongest counter to the competitor demo, and nobody has put it in front of them yet."
+  "one_thing_to_watch": "Only 340 of ~1,100 target outlets are live — that unrealised footprint is the strongest counter to the rival quote, and nobody has put it in front of them yet."
 }
 ```
 
@@ -108,14 +108,14 @@ This account is not one of the real accounts you'll be asked about — it's here
 
 Healthy accounts are where briefings most often go flat. There's usually one obvious growth story, and it's tempting to write it three times in three different words.
 
-Take Alder Snacks (Growth · $920K ARR, up from $700K; 82% of licensed seats daily active; Analytics live in 4 of 9 regions; new Commercial Director not yet met; renewal in 4 months). The expansion story is real, but it is **one** lever, so it gets **one** action:
+Take Alder Snacks (Growth · $920K ARR, up from $700K; 82% of seats log in daily; Analytics live in 4 of 9 regions; a Commercial Director nobody has spoken to yet; renewal in 4 months). The expansion story is real, but it is **one** lever, so it gets **one** action:
 
 ```json
 {
   "next_actions": [
     "Scope the Analytics rollout for the 5 regions not yet live",
-    "Introduce yourself to the new Commercial Director before the 4-month renewal",
-    "Write up the 82% adoption figure as a reference story to anchor the renewal case"
+    "Introduce yourself to the Commercial Director before the 4-month renewal",
+    "Write up the 82% login figure as a reference story to anchor the renewal case"
   ],
   "one_thing_to_watch": "The whole relationship runs through a single sponsor — there is no second relationship holding this account if they move on."
 }
